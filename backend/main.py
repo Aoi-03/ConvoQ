@@ -24,6 +24,7 @@ from backend.services.parser import WhatsAppParser
 from backend.services.multimodal import MultimodalProcessor
 from backend.services.memory import MemoryEngine
 from backend.services.persona import PersonaGenerator
+from backend.services.local_storage import local_storage
 from backend.services.gemini_client import gemini_client
 from backend.agents.analyzer import DeepAnalyzerAgent
 from backend.agents.roaster import RoasterAgent
@@ -118,6 +119,9 @@ def create_project(data: ProjectCreate):
     conn.commit()
     conn.close()
 
+    # Mirror in local file storage
+    local_storage.save_project(data.name, data.description or "")
+
     return ProjectResponse(
         id=p_id,
         name=data.name,
@@ -170,10 +174,18 @@ def get_project_detail(project_id: str):
 
 @app.delete("/api/projects/{project_id}")
 def delete_project(project_id: str):
-    conn = get_db_connection()
-    conn.execute("DELETE FROM projects WHERE id = ?", (project_id,))
-    conn.commit()
-    conn.close()
+    # 1. Delete from local JSON file storage
+    local_storage.delete_project(project_id)
+
+    # 2. Delete from database if initialized
+    try:
+        conn = get_db_connection()
+        conn.execute("DELETE FROM projects WHERE id = ?", (project_id,))
+        conn.commit()
+        conn.close()
+    except Exception:
+        pass
+
     return {"success": True, "message": f"Project {project_id} deleted with all associated chats, personas, and memory."}
 
 

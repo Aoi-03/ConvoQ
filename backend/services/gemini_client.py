@@ -1,17 +1,26 @@
 import os
 import json
 from typing import Optional, Dict, Any, List
-from backend.config import GEMINI_API_KEY, GEMINI_MODEL
+import requests
+
+from backend.config import (
+    GEMINI_API_KEY, GEMINI_MODEL,
+    BACKUP_API_KEY, BACKUP_API_PROVIDER, BACKUP_MODEL
+)
 
 class GeminiClient:
     """
-    Unified client for Gemini API with multimodal capabilities and robust offline fallback.
+    Unified client for Gemini API with multimodal capabilities, automatic backup API failover
+    (Groq/OpenAI), and robust deterministic offline fallback.
     """
     _instance = None
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or GEMINI_API_KEY or os.getenv("GEMINI_API_KEY", "")
         self.model_name = GEMINI_MODEL or "gemini-2.5-flash"
+        self.backup_api_key = BACKUP_API_KEY or os.getenv("BACKUP_API_KEY", "")
+        self.backup_provider = (BACKUP_API_PROVIDER or "groq").lower()
+        self.backup_model = BACKUP_MODEL or ("llama-3.3-70b-versatile" if self.backup_provider == "groq" else "gpt-4o-mini")
         self._client = None
         self._init_client()
 
@@ -37,8 +46,12 @@ class GeminiClient:
 
     def generate_content(self, prompt: str, system_instruction: Optional[str] = None) -> str:
         """
-        Generate text using Gemini API or intelligent offline fallback.
+        Generate text using:
+        1. Primary: Google Gemini API (gemini-2.5-flash)
+        2. Backup Failover: Groq / OpenAI API (if configured)
+        3. Built-in Deterministic Engine: Offline synthesized intelligence
         """
+        # 1. Primary: Gemini API
         if self._client:
             try:
                 config = {}
@@ -53,10 +66,54 @@ class GeminiClient:
                 if response and response.text:
                     return response.text.strip()
             except Exception as e:
-                print(f"[GeminiClient] API call failed: {e}. Falling back to offline engine.")
+                print(f"[GeminiClient] Gemini API call failed: {e}. Attempting backup provider.")
 
-        # Offline fallback synthesis
+        # 2. Backup API Failover (Groq / OpenAI)
+        backup_reply = self._call_backup_api(prompt, system_instruction)
+        if backup_reply:
+            return backup_reply
+
+        # 3. Deterministic offline fallback
         return self._offline_generate(prompt, system_instruction)
+
+    def _call_backup_api(self, prompt: str, system_instruction: Optional[str] = None) -> Optional[str]:
+        """Calls Groq or OpenAI as seamless failover."""
+        if not self.backup_api_key:
+            return None
+
+        try:
+            endpoint = (
+                "https://api.groq.com/openai/v1/chat/completions"
+                if self.backup_provider == "groq"
+                else "https://api.openai.com/v1/chat/completions"
+            )
+            headers = {
+                "Authorization": f"Bearer {self.backup_api_key}",
+                "Content-Type": "application/json",
+            }
+            messages = []
+            if system_instruction:
+                messages.append({"role": "system", "content": system_instruction})
+            messages.append({"role": "user", "content": prompt})
+
+            payload = {
+                "model": self.backup_model,
+                "messages": messages,
+                "temperature": 0.7,
+                "max_tokens": 1200,
+            }
+
+            resp = requests.post(endpoint, headers=headers, json=payload, timeout=15)
+            if resp.status_code == 200:
+                data = resp.json()
+                text = data["choices"][0]["message"]["content"]
+                return text.strip()
+            else:
+                print(f"[BackupAPI] Failover returned status {resp.status_code}: {resp.text}")
+        except Exception as e:
+            print(f"[BackupAPI] Failover connection error: {e}")
+
+        return None
 
     def analyze_image(self, file_path: str, caption_hint: str = "") -> str:
         """
@@ -68,7 +125,6 @@ class GeminiClient:
                 with open(file_path, "rb") as f:
                     image_bytes = f.read()
 
-                # Infer mime type
                 mime_type = "image/jpeg"
                 if file_path.lower().endswith(".png"):
                     mime_type = "image/png"
@@ -92,7 +148,7 @@ class GeminiClient:
 
     def transcribe_audio(self, file_path: str, context_hint: str = "") -> str:
         """
-        Transcribe voice note using Gemini audio understanding or local whisper fallback.
+        Transcribe voice note using Gemini audio understanding or local fallback.
         """
         if self._client and os.path.exists(file_path):
             try:
@@ -130,7 +186,6 @@ class GeminiClient:
 
     def _offline_generate(self, prompt: str, system_instruction: Optional[str] = None) -> str:
         """Intelligent offline fallback that parses the prompt instructions."""
-        # Detect agent persona or role in prompt
         if "Roaster" in prompt or (system_instruction and "roast" in system_instruction.lower()):
             return "Here's the honest truth: their texting frequency is essentially a random number generator, and their voice notes could easily qualify as full-length podcast episodes!"
         if "Reply Giver" in prompt or (system_instruction and "reply" in system_instruction.lower()):

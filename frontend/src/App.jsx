@@ -7,7 +7,6 @@ import {
 import Navbar from './components/Navbar';
 import ProjectSidebar from './components/ProjectSidebar';
 import ChatUploadModal from './components/ChatUploadModal';
-import SettingsModal from './components/SettingsModal';
 import EvidenceDrawer from './components/EvidenceDrawer';
 import ChatViewerModal from './components/ChatViewerModal';
 
@@ -36,7 +35,6 @@ export default function App() {
 
   // Modals & Drawers
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showChatViewer, setShowChatViewer] = useState(false);
   const [viewingChat, setViewingChat] = useState(null);
 
@@ -180,7 +178,6 @@ export default function App() {
       <Navbar
         health={health}
         activeProject={activeProject}
-        onOpenSettings={() => setShowSettingsModal(true)}
       />
 
       <div className="flex flex-1 overflow-hidden">
@@ -477,13 +474,6 @@ export default function App() {
         onClose={() => setShowUploadModal(false)}
         onUpload={handleUploadChat}
         uploading={false}
-      />
-
-      <SettingsModal
-        isOpen={showSettingsModal}
-        onClose={() => setShowSettingsModal(false)}
-        health={health}
-        onSaveSettings={handleSaveSettings}
       />
 
       <ChatViewerModal

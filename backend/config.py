@@ -15,9 +15,32 @@ DB_PATH = DATA_DIR / "agentic_chase.db"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-# Gemini API settings
+# -----------------------------------------------------------------------------
+# PRIMARY AI MODEL CONFIGURATION (GOOGLE GEMINI)
+# -----------------------------------------------------------------------------
+# Add your Gemini API key in .env or right here.
+# Best Model for this task: 'gemini-2.5-flash'
+# Why: Ultra-fast latency, native multimodal (voice note .opus transcription,
+# image OCR, video summary), 1M token context window for huge chat exports.
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+
+# -----------------------------------------------------------------------------
+# FAILOVER / BACKUP API CONFIGURATION
+# -----------------------------------------------------------------------------
+# If Gemini API quota/network fails, the system automatically falls back to:
+# 1. Groq API ('llama-3.3-70b-versatile' - 500+ tok/sec ultra-fast chat reasoning)
+# 2. OpenAI API ('gpt-4o-mini')
+# 3. Built-in Deterministic Stylometric Fallback (works offline without any API)
+BACKUP_API_KEY = os.getenv("BACKUP_API_KEY", os.getenv("GROQ_API_KEY", os.getenv("OPENAI_API_KEY", "")))
+BACKUP_API_PROVIDER = os.getenv("BACKUP_API_PROVIDER", "groq") # 'groq' or 'openai'
+BACKUP_MODEL = os.getenv("BACKUP_MODEL", "llama-3.3-70b-versatile" if BACKUP_API_PROVIDER == "groq" else "gpt-4o-mini")
+
+# -----------------------------------------------------------------------------
+# STORAGE ENGINE CONFIGURATION
+# -----------------------------------------------------------------------------
+# True = Pure local file-based JSON storage (Zero database setup needed)
+USE_LOCAL_STORAGE = os.getenv("USE_LOCAL_STORAGE", "true").lower() in ("true", "1", "yes")
 
 # Server settings
 HOST = os.getenv("HOST", "127.0.0.1")

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Bot, Settings, Sparkles, Database, ShieldCheck, Flame } from 'lucide-react';
+import { Bot, Database, HardDrive } from 'lucide-react';
 
-export default function Navbar({ health, onOpenSettings, activeProject }) {
+export default function Navbar({ activeProject }) {
   return (
     <header className="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-40 px-6 py-3.5 flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -29,25 +29,10 @@ export default function Navbar({ health, onOpenSettings, activeProject }) {
         )}
 
         <div className="flex items-center gap-2">
-          {health?.gemini_api_configured ? (
-            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              Gemini 2.5 Active
-            </span>
-          ) : (
-            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 text-xs font-medium">
-              <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-              Deterministic Mode
-            </span>
-          )}
-
-          <button
-            onClick={onOpenSettings}
-            className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition"
-            title="API & Engine Settings"
-          >
-            <Settings className="w-4 h-4" />
-          </button>
+          <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-xs font-medium">
+            <HardDrive className="w-3.5 h-3.5 text-cyan-400" />
+            Local Storage Enabled
+          </span>
         </div>
       </div>
     </header>
