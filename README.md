@@ -1,134 +1,152 @@
-# ConvoQ: Multi-Agent Chat Intelligence Platform
+# ConvoQ
 
-> **ConvoQ** processes exported conversations (WhatsApp group chats & 1-on-1 chats), extracts participant personas, performs multimodal media analysis (voice notes, images, videos), and provides specialized AI agents for deep conversation analysis, playful roasting, smart reply generation, and verifiable memory recall.
+**Your WhatsApp chats hold a lot more than just messages.** ConvoQ is a multi-agent AI platform that takes your exported WhatsApp conversations — group chats, one-on-ones, voice notes, images, the whole archive — and turns them into something you can actually explore and interact with.
 
----
-
-## 🌟 Key Capabilities
-
-1. **Multi-Project & Multi-Chat Workspace**:
-   - Organize independent conversations into projects.
-   - Automatically classify chats into **Group Conversations** (>2 participants) and **One-to-One Personal Chats** (2 participants).
-   - Maintain separate memory, vector retrieval, and context for each chat, while enabling cross-chat project-level queries.
-
-2. **Universal WhatsApp Export Ingestion**:
-   - Parses iOS bracketed timestamps `[DD/MM/YY, HH:MM:SS]` and Android dash timestamps `DD/MM/YYYY, HH:MM - Sender: Message`.
-   - Supports 12-hour AM/PM and 24-hour formats.
-   - Handles multi-line message continuation and filters system security/encryption events.
-   - Identifies and associates media attachments (`<Media omitted>`, voice notes `.opus`, images `.jpg/.png`, videos `.mp4`, documents `.pdf`).
-
-3. **Multimodal Media Intelligence**:
-   - **Voice Notes**: Transcribes audio notes into text with emotional tone indicators.
-   - **Images**: Scene comprehension and OCR text extraction.
-   - **Videos**: Event and highlight summarization.
-   - Powered by **Google Gemini 2.5 Flash** with an intelligent offline deterministic fallback.
-
-4. **Persistent Conversational Memory & Timeline**:
-   - Automatically detects recurring topics, milestones, and temporal active periods.
-   - Catalogs inside jokes, group memes, and interpersonal dynamics (reply speed, conversational turn-taking).
-   - Computes mood shifts and sentiment evolution across months/semesters.
-
-5. **Participant Persona Generator**:
-   - Generates stylometric dossiers: average message length, emoji DNA, capitalization habits.
-   - Discovers group archetypes (*"The Chief Planner"*, *"The Voice-Note Chronicler"*, *"The Midnight Philosopher"*, *"The Meme Instigator"*).
-   - Identifies specific texting quirks and recurring catchphrases.
-
-6. **Specialized Multi-Agent Suite**:
-   - **📊 Deep Analyzer Agent**: Identifies who drives conversations, participation distribution, and mood changes over time.
-   - **🔥 The Roaster Agent**: Generates witty, personalized roasts based on actual chat habits (e.g. 3-minute voice notes, endless trip planning). Includes **3 intensity levels** (`Mild 🍵`, `Savage 🔥`, `Brutal 💀`) and strict safety filters against harassment.
-   - **💬 Reply Giver Agent**: Suggests 4 tailored response options (Casual, Witty, Diplomatic, Ultra-Brief) or clones any selected participant's style. Includes 1-click copy chips.
-   - **🔍 Memory Recall Agent**: Pinpoints exact past agreements, dates, trip itineraries, and debts with verifiable citations.
-
-7. **Grounded Evidence Retrieval & Citations**:
-   - Agent responses cite verified source messages `[Ref 1]`, `[Ref 2]`.
-   - Clickable citation badges open the **Evidence Inspector Drawer** showing the exact timestamp, sender, chat origin, and message quote.
+Upload a chat export, and ConvoQ figures out who the main characters are, what you collectively talked about most, how the group mood shifted over time, and what actually got decided in all those "okay so Goa trip, final plan?" threads. Then it puts four specialized AI agents at your fingertips to help you dig deeper.
 
 ---
 
-## 🏛️ System Architecture
+## What it does
+
+### Four AI agents, each built for a different job
+
+**📊 Deep Analyzer**
+Breaks down your chat's conversation dynamics — who drives discussions, who kicks things off after a long silence, how participation is distributed, and how the group's emotional tone shifted month by month. Ask it anything: *"Who dominates conversations and how did the mood change around exam season?"*
+
+**🔥 The Roaster**
+Generates personalized, witty roasts grounded in each person's actual chat habits. It reads their real quirks — the 3-minute voice notes, the "on my way" texts sent from bed, the all-caps excitement — and turns them into comedy. Three intensity levels: Mild 🍵, Savage 🔥, and Brutal 💀. Built-in safety filters keep it funny rather than mean.
+
+**💬 Reply Giver**
+Stuck on how to reply to something? Paste the message (or describe the situation), pick a vibe — Casual, Witty, Diplomatic, or Ultra-Brief — and get four ready-to-copy suggestions. You can also clone someone's texting style so the reply sounds exactly like them.
+
+**🔍 Memory Recall**
+The group decided something about the Goa trip in June. Someone owed someone money. There was a plan for that birthday dinner. Memory Recall finds it, tells you exactly what was said, by whom, and when — and cites the original message so you can verify it yourself.
+
+### Every answer is backed by evidence
+
+All agent responses include clickable citation badges — `[Ref 1]`, `[Ref 2]` — that open an **Evidence Inspector Drawer** showing the exact original message, timestamp, sender, and which chat it came from. No hallucinations passed off as facts.
+
+### It actually understands media
+
+Voice notes get transcribed with emotional tone indicators. Images get scene descriptions and OCR text extraction. Videos get summarized. All powered by **Google Gemini 2.5 Flash**, with a graceful offline fallback if the API isn't configured.
+
+### Participant personas, automatically
+
+For every person in your chats, ConvoQ builds a stylometric dossier: their average message length, emoji fingerprint, capitalization habits, peak activity hours, voice-note frequency. It also assigns them a group archetype — *The Chief Planner*, *The Voice-Note Chronicler*, *The Midnight Philosopher*, *The Meme Instigator* — based on their actual behavior patterns.
+
+### Organized by projects
+
+You can group multiple chats into a project and query across all of them at once, or zoom into a single conversation. Group chats (3+ participants) and 1:1 chats are automatically classified and kept in separate contexts.
+
+---
+
+## Under the hood
+
+The backend is FastAPI + SQLite with cascade deletion — deleting a project wipes everything cleanly. Message retrieval uses a hybrid BM25 + cosine similarity search engine built on NumPy and scikit-learn, no external vector database needed. The WhatsApp parser handles both iOS (`[DD/MM/YY, HH:MM:SS]`) and Android (`DD/MM/YYYY, HH:MM - Sender:`) export formats, including 12h/24h clocks, multi-line messages, and media attachments.
+
+The AI layer has a three-tier failover: Gemini 2.5 Flash → Groq (Llama 3.3 70B) → OpenAI (GPT-4o-mini) → built-in deterministic offline engine. The app works without any API key at all — the offline fallback generates structured, coherent responses from the chat data itself.
+
+The frontend is React + Vite + Tailwind, with no heavy UI framework dependencies.
 
 ```
-                      +------------------------------------------+
-                      |         REACT + VITE FRONTEND UI         |
-                      | - Project & Chat Workspaces              |
-                      | - Multi-Agent Interactive Studio         |
-                      | - Evidence Inspector Drawer              |
-                      | - Participant Persona Dossiers           |
-                      +--------------------+---------------------+
-                                           | HTTP / REST API
-                      +--------------------v---------------------+
-                      |           FASTAPI BACKEND CORE           |
-                      +------------------------------------------+
-                      | - SQLite Database (Cascade Deletion)     |
-                      | - WhatsApp Multi-format Parser           |
-                      | - Multimodal Media Processor             |
-                      | - Persistent Memory & Timeline Engine    |
-                      | - Hybrid BM25 & Vector Retrieval         |
-                      | - Google Gemini 2.5 SDK + Offline Mode   |
-                      +--------------------+---------------------+
-                                           |
-             +-----------------------------+-----------------------------+
-             |                             |                             |
-      +------v------+               +------v------+               +------v------+
-      |Deep Analyzer|               | The Roaster |               | Reply Giver |
-      +-------------+               +-------------+               +-------------+
+React + Vite Frontend
+        │
+        │ HTTP / REST
+        ▼
+FastAPI Backend
+  ├── SQLite (cascade deletion)
+  ├── WhatsApp parser (iOS + Android)
+  ├── Multimodal processor (Gemini)
+  ├── Memory & timeline engine
+  ├── Hybrid BM25 + vector retrieval
+  └── AI failover chain
+        │
+        ├── Deep Analyzer Agent
+        ├── The Roaster Agent
+        ├── Reply Giver Agent
+        └── Memory Recall Agent
 ```
 
 ---
 
-## 🚀 Quickstart Guide
+## Getting started
 
-### 1. Requirements
+**Requirements**
 - Python 3.10+
-- Node.js 18+ (tested on Node v24)
-- (Optional) `GEMINI_API_KEY` for live cloud multimodal inference
+- Node.js 18+
+- A Gemini API key is optional — the app runs offline without one
 
-### 2. Backend Setup
+**1. Clone and install backend dependencies**
+
 ```bash
-# From repository root
-python -m pip install -r backend/requirements.txt
+pip install -r backend/requirements.txt
+```
 
-# Run backend test suite (Unit & Integration tests)
-python -m pytest backend/tests
+**2. Configure your API keys (optional)**
 
-# Start FastAPI Server
+Copy `.env.example` to `.env` and fill in what you have:
+
+```env
+# Primary AI — get a free key at https://aistudio.google.com/
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-2.5-flash
+
+# Backup failover — Groq's free tier is fast and generous
+BACKUP_API_PROVIDER=groq
+BACKUP_API_KEY=your_groq_api_key_here
+BACKUP_MODEL=llama-3.3-70b-versatile
+```
+
+All three providers are optional. The app always falls back gracefully.
+
+**3. Start the backend**
+
+```bash
 python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-### 3. Frontend Setup
+**4. Start the frontend**
+
 ```bash
-# In another terminal
 cd frontend
 npm install
 npm run dev
 ```
-Open **`http://localhost:5173`** in your browser.
-*(Or access `http://127.0.0.1:8000` directly if frontend has been built via `npm run build`)*.
+
+Open [http://localhost:5173](http://localhost:5173).
+
+> If you've run `npm run build` in the frontend, the backend also serves the built app directly at [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
 ---
 
-## 🎬 Specification Scenario Demo
+## Try it immediately — no chat export needed
 
-Click the **`Load "Suman" Scenario`** button in the sidebar to immediately load:
-1. **College Friends 🎓** Group Chat (20 participants, voice notes, trip planning, exam stress periods).
-2. **Shrimant** 1-on-1 Personal Chat (Suman & Shrimant discussing viva proofs, voice notes, and coffee meetups).
+Click **"Load 'Suman' Scenario"** in the sidebar. It loads two pre-built sample chats:
 
-Try asking the specialized agents:
-- **Deep Analyzer**: *"Who drives most conversations and how did the group mood change over the year?"*
-- **The Roaster**: Select `Shrimant` and roast them based on their voice-note habits on **Savage 🔥** intensity.
-- **Reply Giver**: Enter *"Meet at CCD in 20 mins?"* and select *Witty* or *Clone Shrimant*.
-- **Memory Recall**: *"What did we decide about the Goa trip in June 2023?"*
-- **Evidence Drawer**: Click any `[Ref 1]` citation badge to inspect the original source message and timestamp!
+- **College Friends 🎓** — a 20-person group chat with voice notes, trip planning debates, and exam stress arcs
+- **Shrimant** — a 1:1 chat between Suman and Shrimant covering viva prep, voice notes, and coffee meetups
+
+Good prompts to try once loaded:
+
+| Agent | Try asking... |
+|---|---|
+| Deep Analyzer | *"Who drives most conversations and how did the group mood change over the year?"* |
+| The Roaster | Select Shrimant → Savage 🔥 intensity → click Roast |
+| Reply Giver | *"Meet at CCD in 20 mins?"* → choose Witty or Clone Shrimant |
+| Memory Recall | *"What did we decide about the Goa trip in June 2023?"* |
+
+Then click any `[Ref 1]` citation badge — the Evidence Drawer slides open with the exact original message.
 
 ---
 
-## 🧪 Testing
+## Running tests
 
-Run the full automated test suite covering parsing, participant detection, memory generation, and agent responses:
 ```bash
 python -m pytest backend/tests -v
 ```
-Output:
+
+Expected output:
+
 ```
 backend/tests/test_agents.py::test_full_pipeline_and_agents PASSED
 backend/tests/test_parser.py::test_parse_android_dash_format PASSED
@@ -139,7 +157,21 @@ backend/tests/test_parser.py::test_multiline_continuation PASSED
 
 ---
 
-## 🔒 Privacy & Safety
-- **Data Isolation**: Each project maintains segregated databases and memory stores.
-- **Cascade Purge**: Deleting a project permanently deletes all chats, messages, media files, and vectors.
-- **Tone Controls & Guardrails**: The Roaster agent enforces content filtering to ensure roasts remain witty, friendly, and free from abusive terms or harassment.
+## Privacy
+
+- Each project has its own isolated database and memory store — nothing bleeds across projects
+- Deleting a project cascade-purges everything: chats, messages, media files, vectors, agent conversations
+- The Roaster's safety filter strips harassment-adjacent terms before any roast is shown
+- No chat data leaves your machine unless you configure an external API key
+
+---
+
+## Tech stack
+
+| Layer | What's used |
+|---|---|
+| Backend | Python 3.10+, FastAPI, SQLite, Pydantic v2 |
+| Frontend | React 18, Vite, Tailwind CSS, Lucide icons |
+| AI / LLM | Google Gemini 2.5 Flash (primary), Groq Llama 3.3 70B (backup), GPT-4o-mini (backup) |
+| Search | BM25 + cosine similarity (NumPy + scikit-learn, no external vector DB) |
+| Media | Gemini multimodal for voice transcription, image OCR, video summarization |
