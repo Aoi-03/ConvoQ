@@ -1,0 +1,21 @@
+[14/01/2023, 16:20:10] Shrimant: Hey Suman, are you free this evening?
+[14/01/2023, 16:21:05] Suman: Hey Shrimant! Yes, wrapping up some assignments. What's up?
+[14/01/2023, 16:22:15] Shrimant: PTT-20230114-WA0012.opus (file attached)
+[14/01/2023, 16:23:00] Suman: Listening now. Give me a second.
+[14/01/2023, 16:24:30] Suman: Haha bro, you could have just texted 'let's grab coffee'! Why the 2-minute voice note? 😂
+[14/01/2023, 16:25:10] Shrimant: Because voice notes capture the true emotional urgency of needing caffeine! Meet at CCD in 20 mins?
+[14/01/2023, 16:26:00] Suman: Sounds good, on my way.
+
+[12/03/2023, 22:45:00] Shrimant: Suman, do you understand Dijkstra's algorithm proof for tomorrow's viva?
+[12/03/2023, 22:46:12] Suman: Yeah, I practiced it yesterday. It uses greedy choice property and induction.
+[12/03/2023, 22:47:00] Suman: IMG-20230312-WA0055.jpg (file attached)
+[12/03/2023, 22:47:15] Suman: Here are my handwritten notes with the step-by-step relaxation proof.
+[12/03/2023, 22:48:30] Shrimant: Wow this diagram is super clean! Thanks a ton Suman.
+[12/03/2023, 22:50:00] Shrimant: PTT-20230312-WA0056.opus (file attached)
+[12/03/2023, 22:51:30] Suman: Haha anytime! Don't stress too much, Prof Sharma is lenient on proofs.
+
+[28/05/2023, 11:30:00] Shrimant: Hey Suman, for the Goa trip, are you taking your DSLR camera?
+[28/05/2023, 11:32:00] Suman: Definitely, charged all batteries and got extra SD cards.
+[28/05/2023, 11:33:15] Shrimant: Awesome! You're designated official group photographer!
+[28/05/2023, 11:34:00] Suman: Only if you promise not to record audio notes while I'm filming! 😂
+[28/05/2023, 11:35:00] Shrimant: No promises, my vocal commentary is essential behind-the-scenes content!
