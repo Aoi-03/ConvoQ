@@ -44,8 +44,6 @@ export default function App() {
   const [evidenceDrawerOpen, setEvidenceDrawerOpen] = useState(false);
   const [selectedCitationId, setSelectedCitationId] = useState(null);
 
-  const [loadingSample, setLoadingSample] = useState(false);
-
   // Load initial health & projects
   useEffect(() => {
     api.getHealth().then(setHealth).catch(console.error);
@@ -98,35 +96,22 @@ export default function App() {
     }
   };
 
-  const handleLoadSampleScenario = async () => {
-    setLoadingSample(true);
-    try {
-      // Create project "Suman" if not exists
-      let sumanProj = projects.find(p => p.name.toLowerCase() === 'suman');
-      if (!sumanProj) {
-        sumanProj = await api.createProject('Suman', 'Official scenario: 20-member College Friends group & Shrimant 1-to-1 conversation');
-      }
-      await api.loadSampleData(sumanProj.id);
-      await refreshProjects(sumanProj.id);
-      const detail = await api.getProjectDetail(sumanProj.id);
-      setProjectDetail(detail);
-      setMainTab('agents');
-      setAgentTab('deep_analyzer');
-    } catch (err) {
-      alert("Failed loading sample scenario: " + err.message);
-    } finally {
-      setLoadingSample(false);
-    }
-  };
-
   const handleUploadChat = async (file, chatName) => {
-    if (!activeProjectId) return;
+    let targetProjectId = activeProjectId;
+    if (!targetProjectId) {
+      // Auto-create a project named after the chat file if no project is active
+      const projName = chatName || file.name.replace(/\.[^/.]+$/, '') || 'WhatsApp Chat';
+      const newProj = await api.createProject(projName, 'Imported WhatsApp chat export');
+      targetProjectId = newProj.id;
+      setActiveProjectId(targetProjectId);
+    }
     try {
-      await api.uploadChat(activeProjectId, file, chatName);
+      await api.uploadChat(targetProjectId, file, chatName);
       setShowUploadModal(false);
-      const detail = await api.getProjectDetail(activeProjectId);
+      await refreshProjects(targetProjectId);
+      const detail = await api.getProjectDetail(targetProjectId);
       setProjectDetail(detail);
-      refreshProjects(activeProjectId);
+      setMainTab('chats');
     } catch (err) {
       alert("Failed to upload and parse chat: " + err.message);
     }
@@ -179,15 +164,8 @@ export default function App() {
   if (view === 'landing') {
     return (
       <LandingPage
-        onLoadScenario={async () => {
-          await handleLoadSampleScenario();
-          setView('workspace');
-        }}
-        onStartBlank={() => {
-          setView('workspace');
-        }}
-        onSelectAgent={async (agentKey) => {
-          await handleLoadSampleScenario();
+        onGetStarted={() => setView('workspace')}
+        onSelectAgent={(agentKey) => {
           setMainTab('agents');
           setAgentTab(agentKey);
           setView('workspace');
@@ -212,8 +190,6 @@ export default function App() {
           onSelectProject={(id) => setActiveProjectId(id)}
           onCreateProject={handleCreateProject}
           onDeleteProject={handleDeleteProject}
-          onLoadSampleData={handleLoadSampleScenario}
-          loadingSample={loadingSample}
         />
 
         {/* Main Work Area */}
@@ -225,15 +201,15 @@ export default function App() {
               </div>
               <h2 className="text-xl font-bold text-[#150e0f]">Welcome to ConvoQ</h2>
               <p className="text-xs text-[#6f5e63] max-w-md">
-                Select an existing project on the left, create a new one, or load the sample WhatsApp scenario to start analyzing conversations.
+                Select a project on the left or import an exported WhatsApp chat text file to start analyzing conversations.
               </p>
               <div className="flex items-center gap-3 pt-2">
                 <button
-                  onClick={handleLoadSampleScenario}
-                  disabled={loadingSample}
-                  className="px-4 py-2 rounded-xl bg-[#9b6d77] hover:bg-[#865b64] text-white text-xs font-bold transition shadow-sm cursor-pointer"
+                  onClick={() => setShowUploadModal(true)}
+                  className="px-5 py-2.5 rounded-xl bg-[#9b6d77] hover:bg-[#865b64] text-white text-xs font-bold transition shadow-sm cursor-pointer flex items-center gap-2"
                 >
-                  {loadingSample ? 'Loading Real Chats...' : 'Load Sample WhatsApp Conversation'}
+                  <Upload className="w-4 h-4" />
+                  <span>Import WhatsApp Chat</span>
                 </button>
               </div>
             </div>

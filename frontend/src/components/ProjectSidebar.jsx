@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { Folder, Plus, Trash2, Users, MessageSquare, Sparkles, FolderPlus, Compass } from 'lucide-react';
+import { Folder, Plus, Trash2, Users, MessageSquare, FolderPlus } from 'lucide-react';
 
 export default function ProjectSidebar({
   projects,
   activeProjectId,
   onSelectProject,
   onCreateProject,
-  onDeleteProject,
-  onLoadSampleData,
-  loadingSample
+  onDeleteProject
 }) {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [projectName, setProjectName] = useState('');
@@ -44,31 +42,20 @@ export default function ProjectSidebar({
         </button>
       </div>
 
-      {/* Quick Sample Scenario Loader */}
-      <div className="p-3 bg-gradient-to-r from-[#f4ecee] to-[#edf4f2] border-b border-[#ebdada]">
-        <div className="flex items-center gap-2 mb-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-[#9b6d77] animate-spin" style={{ animationDuration: '6s' }} />
-          <span className="text-xs font-bold text-[#9b6d77]">Sample Dataset</span>
-        </div>
-        <p className="text-[11px] text-[#5e4f53] mb-2 leading-relaxed">
-          Pre-load 20-member College Friends group & 1:1 chat export with real voice notes and messages.
-        </p>
-        <button
-          onClick={onLoadSampleData}
-          disabled={loadingSample}
-          className="w-full py-1.5 px-2.5 rounded-lg bg-[#9b6d77] hover:bg-[#865b64] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-[#9b6d77]/20 disabled:opacity-60 transition cursor-pointer"
-        >
-          <Compass className="w-3.5 h-3.5" />
-          <span>{loadingSample ? 'Loading Chats...' : 'Load Sample WhatsApp Chats'}</span>
-        </button>
-      </div>
-
       {/* Projects List */}
       <div className="flex-1 overflow-y-auto p-3 space-y-2">
         {projects.length === 0 ? (
           <div className="p-6 text-center text-[#826f74] text-xs">
             <FolderPlus className="w-8 h-8 mx-auto mb-2 opacity-50 text-[#9b6d77]" />
-            No projects created yet. Click "New" or load the "Suman" scenario.
+            <p className="font-medium text-[#150e0f] mb-1">No projects yet</p>
+            <p className="text-[11px] text-[#826f74] mb-3">Create a project to import and analyze WhatsApp conversations.</p>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="px-3 py-1.5 rounded-lg bg-[#9b6d77] hover:bg-[#865b64] text-white text-xs font-semibold shadow-xs cursor-pointer inline-flex items-center gap-1.5"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Create Project</span>
+            </button>
           </div>
         ) : (
           projects.map((p) => {
@@ -99,21 +86,21 @@ export default function ProjectSidebar({
                         onDeleteProject(p.id);
                       }
                     }}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-[#826f74] hover:text-red-500 transition"
+                    className="opacity-0 group-hover:opacity-100 p-1 text-[#826f74] hover:text-[#c26154] hover:bg-[#f4ecee] rounded transition"
                     title="Delete Project"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
 
-                <div className="mt-2.5 flex items-center gap-3 text-[11px] text-[#6f5e63]">
-                  <span className="flex items-center gap-1 font-medium">
-                    <MessageSquare className="w-3 h-3 text-[#9b6d77]" />
-                    {p.chat_count} {p.chat_count === 1 ? 'chat' : 'chats'}
+                <div className="flex items-center gap-3 mt-2.5 text-[11px] text-[#826f74] font-mono">
+                  <span className="flex items-center gap-1">
+                    <MessageSquare className="w-3 h-3 text-[#87ada2]" />
+                    {p.chat_count || 0} {p.chat_count === 1 ? 'chat' : 'chats'}
                   </span>
-                  <span className="flex items-center gap-1 font-medium">
-                    <Users className="w-3 h-3 text-[#87ada2]" />
-                    {p.participant_count} members
+                  <span className="flex items-center gap-1">
+                    <Users className="w-3 h-3 text-[#b1cab2]" />
+                    {p.participant_count || 0} members
                   </span>
                 </div>
               </div>
@@ -124,45 +111,49 @@ export default function ProjectSidebar({
 
       {/* Create Project Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 bg-[#150e0f]/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#ffffff] border border-[#e8dfe2] rounded-2xl w-full max-w-md p-6 shadow-2xl">
-            <h2 className="text-lg font-bold text-[#150e0f] mb-2">Create New Project</h2>
-            <p className="text-xs text-[#5e4f53] mb-4">
-              A project contains multiple independent conversations (groups & 1:1 personal chats) with shared memory.
+        <div className="fixed inset-0 z-50 bg-[#150e0f]/40 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#ffffff] border border-[#e8dfe2] rounded-2xl w-full max-w-sm p-5 shadow-2xl">
+            <h3 className="font-bold text-base text-[#150e0f] mb-1">Create New Project</h3>
+            <p className="text-xs text-[#6f5e63] mb-4">
+              Group related exported conversations and participant personas in browser local storage.
             </p>
-            <form onSubmit={handleCreate} className="space-y-4">
+
+            <form onSubmit={handleCreate} className="space-y-3.5">
               <div>
                 <label className="block text-xs font-semibold text-[#150e0f] mb-1">Project Name</label>
                 <input
                   type="text"
-                  placeholder="e.g. Suman, College Memories, Tech Team"
+                  required
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-[#fcfafb] border border-[#ded1d5] text-[#150e0f] text-sm focus:outline-none focus:border-[#9b6d77]"
+                  placeholder="e.g. Friends Trip, Tech Team, Family Chat"
+                  className="w-full px-3 py-2 rounded-xl border border-[#e8dfe2] bg-[#fcfafb] text-sm text-[#150e0f] focus:outline-none focus:border-[#9b6d77]"
                   autoFocus
-                  required
                 />
               </div>
+
               <div>
                 <label className="block text-xs font-semibold text-[#150e0f] mb-1">Description (Optional)</label>
                 <textarea
-                  placeholder="Brief note about the conversations in this project..."
                   value={projectDesc}
                   onChange={(e) => setProjectDesc(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-[#fcfafb] border border-[#ded1d5] text-[#150e0f] text-sm focus:outline-none focus:border-[#9b6d77] resize-none h-20"
+                  placeholder="e.g. Group vacation planning, inside jokes, and receipts"
+                  rows={2}
+                  className="w-full px-3 py-2 rounded-xl border border-[#e8dfe2] bg-[#fcfafb] text-sm text-[#150e0f] focus:outline-none focus:border-[#9b6d77]"
                 />
               </div>
+
               <div className="flex items-center justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 rounded-xl bg-[#f4ecee] hover:bg-[#ebdada] text-[#5e4f53] text-xs font-semibold transition"
+                  className="px-3.5 py-2 rounded-xl text-xs font-semibold text-[#6f5e63] hover:bg-[#f4ecee] transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-[#9b6d77] hover:bg-[#865b64] text-white text-xs font-semibold shadow-md transition"
+                  className="px-4 py-2 rounded-xl bg-[#9b6d77] hover:bg-[#865b64] text-white text-xs font-bold transition shadow-sm"
                 >
                   Create Project
                 </button>

@@ -5,8 +5,7 @@ import {
 } from 'lucide-react';
 
 export default function LandingPage({
-  onLoadScenario,
-  onStartBlank,
+  onGetStarted,
   onSelectAgent
 }) {
   // Active agent index defaults to 1 (The Roaster) to match mockup screenshot exactly
@@ -119,20 +118,12 @@ export default function LandingPage({
           {/* Primary Action Buttons */}
           <div className="flex flex-wrap items-center gap-3.5 pt-2">
             <button
-              onClick={onLoadScenario}
-              className="px-6 py-3.5 rounded-xl bg-[#9b6d77] hover:bg-[#865b64] text-white font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-lg shadow-[#9b6d77]/30 transition-all transform hover:scale-[1.02] active:scale-[0.99] cursor-pointer"
+              onClick={onGetStarted}
+              className="px-7 py-3.5 rounded-xl bg-[#9b6d77] hover:bg-[#865b64] text-white font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-lg shadow-[#9b6d77]/30 transition-all transform hover:scale-[1.02] active:scale-[0.99] cursor-pointer"
             >
               <Zap className="w-4 h-4 fill-current" />
-              <span>Load Real WhatsApp Sample</span>
+              <span>Get Started</span>
               <ArrowRight className="w-4 h-4 ml-0.5" />
-            </button>
-
-            <button
-              onClick={onStartBlank}
-              className="px-5 py-3.5 rounded-xl bg-[#ffffff] hover:bg-[#f9f5f6] text-[#150e0f] border border-[#ded1d5] hover:border-[#9b6d77]/60 font-medium text-sm sm:text-base flex items-center gap-2 shadow-sm transition cursor-pointer"
-            >
-              <Plus className="w-4 h-4 text-[#87ada2]" />
-              <span>Open Live Workspace</span>
             </button>
           </div>
 

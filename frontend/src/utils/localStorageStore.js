@@ -46,7 +46,12 @@ function setToStorage(key, value) {
 export const localStore = {
   // --- Projects ---
   getProjects() {
-    const projects = getFromStorage(KEYS.PROJECTS, []);
+    let projects = getFromStorage(KEYS.PROJECTS, []);
+    // Clean up any legacy auto-created sample project
+    if (projects.some(p => p.name.toLowerCase() === 'suman' && (p.description || '').includes('20-member'))) {
+      projects = projects.filter(p => !(p.name.toLowerCase() === 'suman' && (p.description || '').includes('20-member')));
+      setToStorage(KEYS.PROJECTS, projects);
+    }
     return projects.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
   },
 
