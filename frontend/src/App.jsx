@@ -20,6 +20,7 @@ import PersonasView from './components/PersonasView';
 import { api } from './api/client';
 
 export default function App() {
+  // First page is the Landing Page with live animated agent mesh showcase
   const [view, setView] = useState('landing'); // 'landing' | 'workspace'
   const [health, setHealth] = useState(null);
   const [projects, setProjects] = useState([]);
@@ -224,8 +225,17 @@ export default function App() {
               </div>
               <h2 className="text-xl font-bold text-[#150e0f]">Welcome to ConvoQ</h2>
               <p className="text-xs text-[#6f5e63] max-w-md">
-                Select an existing project or click <strong>"Load 'Suman' Scenario"</strong> on the left to immediately explore the multi-agent chat intelligence platform.
+                Select an existing project on the left, create a new one, or load the sample WhatsApp scenario to start analyzing conversations.
               </p>
+              <div className="flex items-center gap-3 pt-2">
+                <button
+                  onClick={handleLoadSampleScenario}
+                  disabled={loadingSample}
+                  className="px-4 py-2 rounded-xl bg-[#9b6d77] hover:bg-[#865b64] text-white text-xs font-bold transition shadow-sm cursor-pointer"
+                >
+                  {loadingSample ? 'Loading Real Chats...' : 'Load Sample WhatsApp Conversation'}
+                </button>
+              </div>
             </div>
           ) : (
             <div className="flex-1 flex flex-col h-full overflow-hidden">

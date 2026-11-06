@@ -1,4 +1,5 @@
 import json
+import re
 from typing import Dict, Any, List, Optional
 from backend.agents.base import BaseAgent
 from backend.models.schemas import AgentType, AgentQueryResponse, ReplyStyle, CitationItem
@@ -70,10 +71,14 @@ Please generate 4 distinct reply suggestions:
             answer = self.gemini.generate_content(prompt, system_instruction=system_instruction)
             # Extract suggested lines
             for line in answer.splitlines():
-                if line.strip().startswith(("1.", "2.", "3.", "4.", "-")):
-                    cleaned = line.strip().lstrip("1234.- *").strip()
+                clean_l = line.strip()
+                if clean_l.startswith(("1.", "2.", "3.", "4.", "-", "*", "Option 1", "Option 2", "Option 3")):
+                    cleaned = re.sub(r"^(Option\s*\d+:?|[0-9]+[.)]|[-*])\s*", "", clean_l).strip().strip('"*')
                     if len(cleaned) > 2:
                         suggestions.append(cleaned)
+            if len(suggestions) < 2:
+                _, fallback_suggs = self._generate_offline_replies(query, style, clone_participant_name, citations)
+                suggestions.extend(fallback_suggs)
         else:
             answer, suggestions = self._generate_offline_replies(query, style, clone_participant_name, citations)
 

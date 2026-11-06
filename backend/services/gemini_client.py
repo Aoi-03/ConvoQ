@@ -186,10 +186,13 @@ class GeminiClient:
 
     def _offline_generate(self, prompt: str, system_instruction: Optional[str] = None) -> str:
         """Intelligent offline fallback that parses the prompt instructions."""
+        import re
         if "Roaster" in prompt or (system_instruction and "roast" in system_instruction.lower()):
-            return "Here's the honest truth: their texting frequency is essentially a random number generator, and their voice notes could easily qualify as full-length podcast episodes!"
+            target_match = re.search(r"Target to Roast:\s*([^\n]+)", prompt)
+            target_name = target_match.group(1).strip() if target_match else "this participant"
+            return f"Here's the honest truth about {target_name}: their texting frequency is essentially a random number generator, and their voice notes could easily qualify as full-length podcast episodes!"
         if "Reply Giver" in prompt or (system_instruction and "reply" in system_instruction.lower()):
-            return "Option 1: Haha exactly, totally agree! Let's do that.\nOption 2: Running a bit behind, give me 10 mins.\nOption 3: Bro, you're hilarious as always."
+            return "1. Haha exactly, totally agree! Let's do that.\n2. Running a bit behind, give me 10 mins.\n3. Bro, you're hilarious as always."
         return "Analysis completed based on historical chat records and participant dynamics."
 
 # Global singleton

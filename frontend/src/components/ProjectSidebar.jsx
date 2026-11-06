@@ -48,10 +48,10 @@ export default function ProjectSidebar({
       <div className="p-3 bg-gradient-to-r from-[#f4ecee] to-[#edf4f2] border-b border-[#ebdada]">
         <div className="flex items-center gap-2 mb-1.5">
           <Sparkles className="w-3.5 h-3.5 text-[#9b6d77] animate-spin" style={{ animationDuration: '6s' }} />
-          <span className="text-xs font-bold text-[#9b6d77]">Specification Demo</span>
+          <span className="text-xs font-bold text-[#9b6d77]">Sample Dataset</span>
         </div>
         <p className="text-[11px] text-[#5e4f53] mb-2 leading-relaxed">
-          Pre-load the official <strong>'Suman'</strong> project with 20-member College Friends group & 1:1 chat.
+          Pre-load 20-member College Friends group & 1:1 chat export with real voice notes and messages.
         </p>
         <button
           onClick={onLoadSampleData}
@@ -59,7 +59,7 @@ export default function ProjectSidebar({
           className="w-full py-1.5 px-2.5 rounded-lg bg-[#9b6d77] hover:bg-[#865b64] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-[#9b6d77]/20 disabled:opacity-60 transition cursor-pointer"
         >
           <Compass className="w-3.5 h-3.5" />
-          <span>{loadingSample ? 'Loading Demo Chats...' : 'Load "Suman" Scenario'}</span>
+          <span>{loadingSample ? 'Loading Chats...' : 'Load Sample WhatsApp Chats'}</span>
         </button>
       </div>
 

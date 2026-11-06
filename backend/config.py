@@ -19,11 +19,11 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 # PRIMARY AI MODEL CONFIGURATION (GOOGLE GEMINI)
 # -----------------------------------------------------------------------------
 # Add your Gemini API key in .env or right here.
-# Best Model for this task: 'gemini-2.5-flash'
+# Best Model for this task: 'gemini-3.8-flash'
 # Why: Ultra-fast latency, native multimodal (voice note .opus transcription,
 # image OCR, video summary), 1M token context window for huge chat exports.
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
 
 # -----------------------------------------------------------------------------
 # FAILOVER / BACKUP API CONFIGURATION
@@ -44,7 +44,7 @@ USE_LOCAL_STORAGE = os.getenv("USE_LOCAL_STORAGE", "true").lower() in ("true", "
 
 # Server settings
 HOST = os.getenv("HOST", "127.0.0.1")
-PORT = int(os.getenv("PORT", "8000"))
+PORT = int(os.getenv("PORT", "8001"))
 CORS_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
