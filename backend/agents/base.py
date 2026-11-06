@@ -77,6 +77,14 @@ class BaseAgent:
 
         conv_id = conversation_id or str(uuid.uuid4())
 
+        # Check if project exists, or insert stub so foreign key constraint never fails
+        proj_exists = conn.execute("SELECT id FROM projects WHERE id = ?", (project_id,)).fetchone()
+        if not proj_exists:
+            conn.execute(
+                "INSERT OR IGNORE INTO projects (id, name, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+                (project_id, "Project", "Local Workspace Project", now_iso, now_iso)
+            )
+
         # Check if conversation exists
         existing = conn.execute("SELECT id FROM agent_conversations WHERE id = ?", (conv_id,)).fetchone()
         if not existing:

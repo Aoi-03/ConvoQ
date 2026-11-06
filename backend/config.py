@@ -19,11 +19,11 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 # PRIMARY AI MODEL CONFIGURATION (GOOGLE GEMINI)
 # -----------------------------------------------------------------------------
 # Add your Gemini API key in .env or right here.
-# Best Model for this task: 'gemini-3.8-flash'
+# Best Model for this task: 'gemini-3-flash-preview'
 # Why: Ultra-fast latency, native multimodal (voice note .opus transcription,
 # image OCR, video summary), 1M token context window for huge chat exports.
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3-flash-preview")
 
 # -----------------------------------------------------------------------------
 # FAILOVER / BACKUP API CONFIGURATION

@@ -17,10 +17,23 @@ class GeminiClient:
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or GEMINI_API_KEY or os.getenv("GEMINI_API_KEY", "")
-        self.model_name = GEMINI_MODEL or "gemini-2.5-flash"
+        self.model_name = GEMINI_MODEL or "gemini-3-flash-preview"
+        # Known supported Gemini models in order of capability
+        self.supported_models = [
+            self.model_name,
+            "gemini-3-flash-preview",
+            "gemini-3.1-flash-lite-preview",
+            "gemini-3.1-flash-lite"
+        ]
+        # Remove duplicates while preserving order
+        self.supported_models = list(dict.fromkeys(self.supported_models))
         self.backup_api_key = BACKUP_API_KEY or os.getenv("BACKUP_API_KEY", "")
         self.backup_provider = (BACKUP_API_PROVIDER or "groq").lower()
-        self.backup_model = BACKUP_MODEL or ("llama-3.3-70b-versatile" if self.backup_provider == "groq" else "gpt-4o-mini")
+        default_model = "gpt-4o-mini" if self.backup_provider == "openai" else "llama-3.3-70b-versatile"
+        self.backup_model = BACKUP_MODEL if (BACKUP_MODEL and (
+            ("llama" in BACKUP_MODEL and self.backup_provider == "groq") or
+            ("gpt" in BACKUP_MODEL and self.backup_provider == "openai")
+        )) else default_model
         self._client = None
         self._init_client()
 
@@ -33,7 +46,10 @@ class GeminiClient:
         if self.api_key:
             try:
                 from google import genai
-                self._client = genai.Client(api_key=self.api_key)
+                self._client = genai.Client(
+                    api_key=self.api_key,
+                    http_options={'api_version': 'v1beta'}
+                )
             except Exception as e:
                 print(f"[GeminiClient] Could not initialize genai.Client: {e}")
                 self._client = None
@@ -51,22 +67,45 @@ class GeminiClient:
         2. Backup Failover: Groq / OpenAI API (if configured)
         3. Built-in Deterministic Engine: Offline synthesized intelligence
         """
-        # 1. Primary: Gemini API
-        if self._client:
-            try:
-                config = {}
-                if system_instruction:
-                    config["system_instruction"] = system_instruction
-                
-                response = self._client.models.generate_content(
-                    model=self.model_name,
-                    contents=prompt,
-                    config=config if config else None,
-                )
-                if response and response.text:
-                    return response.text.strip()
-            except Exception as e:
-                print(f"[GeminiClient] Gemini API call failed: {e}. Attempting backup provider.")
+        # 1. Primary: Gemini API with auto-fallback across valid models
+        if self.api_key:
+            for model in self.supported_models:
+                # A. Try official google-genai SDK
+                if self._client:
+                    try:
+                        config = {}
+                        if system_instruction:
+                            config["system_instruction"] = system_instruction
+                        response = self._client.models.generate_content(
+                            model=model,
+                            contents=prompt,
+                            config=config if config else None,
+                        )
+                        if response and response.text:
+                            self.model_name = model
+                            return response.text.strip()
+                    except Exception as e:
+                        print(f"[GeminiClient] SDK call failed with {model}: {e}. Trying direct REST/next model.")
+
+                # B. Try direct REST fallback
+                try:
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={self.api_key}"
+                    payload = {"contents": [{"parts": [{"text": prompt}]}]}
+                    if system_instruction:
+                        payload["systemInstruction"] = {"parts": [{"text": system_instruction}]}
+                    resp = requests.post(url, json=payload, timeout=20)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        candidates = data.get("candidates", [])
+                        if candidates and "content" in candidates[0]:
+                            parts = candidates[0]["content"].get("parts", [])
+                            if parts and "text" in parts[0]:
+                                self.model_name = model
+                                return parts[0]["text"].strip()
+                    else:
+                        print(f"[GeminiClient] REST call with {model} failed ({resp.status_code}): {resp.text[:120]}")
+                except Exception as rest_err:
+                    print(f"[GeminiClient] REST request error with {model}: {rest_err}")
 
         # 2. Backup API Failover (Groq / OpenAI)
         backup_reply = self._call_backup_api(prompt, system_instruction)

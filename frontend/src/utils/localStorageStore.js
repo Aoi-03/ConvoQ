@@ -48,10 +48,23 @@ export const localStore = {
   getProjects() {
     let projects = getFromStorage(KEYS.PROJECTS, []);
     // Clean up any legacy auto-created sample project
-    if (projects.some(p => p.name.toLowerCase() === 'suman' && (p.description || '').includes('20-member'))) {
-      projects = projects.filter(p => !(p.name.toLowerCase() === 'suman' && (p.description || '').includes('20-member')));
+    const isSampleSuman = (p) => {
+      const name = (p.name || '').toLowerCase().trim();
+      const desc = (p.description || '').toLowerCase();
+      return name === 'suman' && (desc.includes('20-member') || desc.includes('official scenario') || desc.includes('sample'));
+    };
+    if (projects.some(isSampleSuman)) {
+      projects = projects.filter(p => !isSampleSuman(p));
       setToStorage(KEYS.PROJECTS, projects);
     }
+    // Also clean up from legacy key if present
+    try {
+      let legacy = JSON.parse(localStorage.getItem(LEGACY_KEYS.PROJECTS) || '[]');
+      if (Array.isArray(legacy) && legacy.some(isSampleSuman)) {
+        legacy = legacy.filter(p => !isSampleSuman(p));
+        localStorage.setItem(LEGACY_KEYS.PROJECTS, JSON.stringify(legacy));
+      }
+    } catch (e) {}
     return projects.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
   },
 

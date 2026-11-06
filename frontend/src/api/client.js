@@ -3,36 +3,48 @@ import { parseWhatsAppText } from '../utils/whatsappParser';
 
 const API_BASE = '/api';
 
+/**
+ * Universal safe fetch that handles proxy errors, timeouts, and empty responses
+ * without ever throwing "SyntaxError: Unexpected end of JSON input".
+ */
+async function safeFetchJson(url, options = {}, timeoutMs = 8000) {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    const res = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    if (!res.ok) return null;
+    const text = await res.text();
+    if (!text || !text.trim()) return null;
+    return JSON.parse(text);
+  } catch (e) {
+    return null;
+  }
+}
+
 export const api = {
   async getHealth() {
-    try {
-      const res = await fetch(`${API_BASE}/health`, { signal: AbortSignal.timeout(1500) });
-      if (res.ok) {
-        const data = await res.json();
-        return { ...data, backend_online: true };
-      }
-    } catch (e) {
-      // Backend offline - use local storage mode
+    const data = await safeFetchJson(`${API_BASE}/health`, {}, 2500);
+    if (data && data.status) {
+      return { ...data, backend_online: true };
     }
     return {
       status: "healthy (local storage mode)",
       storage_mode: "local_storage",
       gemini_api_configured: false,
       backend_online: false,
-      model: "gemini-3.8-flash"
+      model: "gemini-3-flash-preview"
     };
   },
 
   async getProjects() {
-    try {
-      const res = await fetch(`${API_BASE}/projects`, { signal: AbortSignal.timeout(2000) });
-      if (res.ok) {
-        const backendProjects = await res.json();
-        if (Array.isArray(backendProjects) && backendProjects.length > 0) {
-          return backendProjects;
-        }
-      }
-    } catch (e) {}
+    const backendProjects = await safeFetchJson(`${API_BASE}/projects`, {}, 3000);
+    if (Array.isArray(backendProjects) && backendProjects.length > 0) {
+      return backendProjects;
+    }
     // Return browser local storage projects
     return localStore.getProjects();
   },
@@ -42,26 +54,20 @@ export const api = {
     const localProj = localStore.saveProject(name, description);
 
     // 2. Sync with backend if available
-    try {
-      const res = await fetch(`${API_BASE}/projects`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description }),
-        signal: AbortSignal.timeout(2500)
-      });
-      if (res.ok) {
-        return await res.json();
-      }
-    } catch (e) {}
+    const backendProj = await safeFetchJson(`${API_BASE}/projects`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, description }),
+    }, 4000);
 
-    return localProj;
+    return backendProj || localProj;
   },
 
   async getProjectDetail(projectId) {
-    try {
-      const res = await fetch(`${API_BASE}/projects/${projectId}`, { signal: AbortSignal.timeout(2500) });
-      if (res.ok) return await res.json();
-    } catch (e) {}
+    const backendDetail = await safeFetchJson(`${API_BASE}/projects/${projectId}`, {}, 5000);
+    if (backendDetail && backendDetail.project) {
+      return backendDetail;
+    }
 
     const project = localStore.getProject(projectId);
     const chats = localStore.getChats(projectId);
@@ -90,34 +96,31 @@ export const api = {
     localStore.deleteProject(projectId);
 
     // 2. Also delete from backend if available
-    try {
-      await fetch(`${API_BASE}/projects/${projectId}`, { method: 'DELETE', signal: AbortSignal.timeout(2000) });
-    } catch (e) {}
+    await safeFetchJson(`${API_BASE}/projects/${projectId}`, { method: 'DELETE' }, 3000);
 
-    return { success: true, message: "Project deleted from local storage." };
+    return { success: true, message: "Project deleted." };
   },
 
   async uploadChat(projectId, file, chatName = '') {
     const finalChatName = chatName || file.name.replace(/\.[^/.]+$/, '');
 
-    // 1. Attempt backend upload first if online
+    // 1. Attempt backend upload first with generous 60s timeout for large chats
     try {
       const formData = new FormData();
       formData.append('file', file);
       if (finalChatName) {
         formData.append('chat_name', finalChatName);
       }
-      const res = await fetch(`${API_BASE}/projects/${projectId}/chats/upload`, {
+      const backendData = await safeFetchJson(`${API_BASE}/projects/${projectId}/chats/upload`, {
         method: 'POST',
         body: formData,
-        signal: AbortSignal.timeout(5000),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return data;
+      }, 60000);
+
+      if (backendData && (backendData.success || backendData.chat_id)) {
+        return backendData;
       }
     } catch (backendErr) {
-      console.warn("Backend offline or unreachable, parsing chat directly in browser local storage:", backendErr);
+      console.warn("Backend upload error, switching to browser local storage:", backendErr);
     }
 
     // 2. Robust Client-Side LocalStorage Fallback (Works 100% offline, zero backend required)
@@ -156,12 +159,12 @@ export const api = {
   },
 
   async getChatMessages(projectId, chatId, limit = 100, offset = 0) {
-    try {
-      const res = await fetch(`${API_BASE}/projects/${projectId}/chats/${chatId}/messages?limit=${limit}&offset=${offset}`, {
-        signal: AbortSignal.timeout(2500)
-      });
-      if (res.ok) return await res.json();
-    } catch (e) {}
+    const backendMsgs = await safeFetchJson(
+      `${API_BASE}/projects/${projectId}/chats/${chatId}/messages?limit=${limit}&offset=${offset}`,
+      {},
+      4000
+    );
+    if (backendMsgs && backendMsgs.messages) return backendMsgs;
 
     const msgs = localStore.getMessages(projectId, chatId);
     return {
@@ -173,22 +176,18 @@ export const api = {
   },
 
   async queryAgent(payload) {
-    // 1. Try backend API first
-    try {
-      const res = await fetch(`${API_BASE}/agents/query`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(10000)
-      });
-      if (res.ok) {
-        return await res.json();
-      }
-    } catch (e) {
-      console.warn("Backend agent API offline, generating intelligent client-side response from local storage:", e);
+    // 1. Try backend API first with 45s timeout for deep LLM reasoning
+    const backendRes = await safeFetchJson(`${API_BASE}/agents/query`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }, 45000);
+
+    if (backendRes && backendRes.answer) {
+      return backendRes;
     }
 
-    // 2. Offline / LocalStorage Grounded Fallback
+    // 2. Offline / LocalStorage Grounded Fallback (when backend server is stopped)
     const messages = localStore.getMessages(payload.project_id, payload.chat_id);
     const nonSystem = messages.filter(m => !m.is_system && m.sender !== 'System');
     const sample = nonSystem.slice(-10);
