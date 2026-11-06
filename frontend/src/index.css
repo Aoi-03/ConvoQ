@@ -4,23 +4,39 @@
 
 :root {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+  --ink: #f1f5f9;
+  --muted: #8b96aa;
+  --line: #1a2436;
+  --panel: #0d1424;
+  --panel2: #080d19;
+  --cyan: #22d3ee;
+  --indigo: #818cf8;
+  --amber: #fbbf24;
+  --emerald: #34d399;
+  --rose: #fb7185;
 }
 
-/* Custom scrollbar */
+body {
+  background-color: #070a12;
+  color: var(--ink);
+}
+
+/* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(11, 16, 28, 0.8);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(51, 65, 85, 0.8);
+  background: rgba(30, 41, 59, 0.9);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 1);
+  background: rgba(56, 189, 248, 0.4);
 }

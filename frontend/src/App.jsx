@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 
 import Navbar from './components/Navbar';
+import LandingPage from './components/LandingPage';
 import ProjectSidebar from './components/ProjectSidebar';
 import ChatUploadModal from './components/ChatUploadModal';
 import EvidenceDrawer from './components/EvidenceDrawer';
@@ -19,6 +20,7 @@ import PersonasView from './components/PersonasView';
 import { api } from './api/client';
 
 export default function App() {
+  const [view, setView] = useState('landing'); // 'landing' | 'workspace'
   const [health, setHealth] = useState(null);
   const [projects, setProjects] = useState([]);
   const [activeProjectId, setActiveProjectId] = useState(null);
@@ -173,11 +175,32 @@ export default function App() {
   const activeProject = projects.find(p => p.id === activeProjectId);
   const currentAgentResponse = lastResponses[agentTab];
 
+  if (view === 'landing') {
+    return (
+      <LandingPage
+        onLoadScenario={async () => {
+          await handleLoadSampleScenario();
+          setView('workspace');
+        }}
+        onStartBlank={() => {
+          setView('workspace');
+        }}
+        onSelectAgent={async (agentKey) => {
+          await handleLoadSampleScenario();
+          setMainTab('agents');
+          setAgentTab(agentKey);
+          setView('workspace');
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
       <Navbar
         health={health}
         activeProject={activeProject}
+        onBackToLanding={() => setView('landing')}
       />
 
       <div className="flex flex-1 overflow-hidden">
