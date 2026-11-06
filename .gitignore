@@ -1,0 +1,25 @@
+# Ignored documentation files per project instruction
+roadmap.md
+ROADMAP.md
+workingcommit.md
+WORKINGCOMMIT.md
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.env
+.venv/
+env/
+venv/
+*.sqlite3
+*.db
+uploads/
+
+# Node & Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.DS_Store
