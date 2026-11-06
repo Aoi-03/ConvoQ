@@ -17,6 +17,7 @@ venv/
 *.db
 uploads/
 backend/data/
+color2_extracted/
 
 # Node & Frontend
 node_modules/

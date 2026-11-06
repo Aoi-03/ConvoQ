@@ -1,8 +1,7 @@
 import React from 'react';
 import {
   Zap, ArrowRight, Plus, Box, Quote, Database, Activity,
-  BarChart3, Flame, MessageSquarePlus, History, Sparkles,
-  GitFork, CheckCircle2, ShieldCheck, CornerRightDown
+  BarChart3, Flame, MessageSquarePlus, History, Sparkles
 } from 'lucide-react';
 
 export default function LandingPage({
@@ -11,18 +10,18 @@ export default function LandingPage({
   onSelectAgent
 }) {
   return (
-    <div className="min-h-screen bg-[#070a12] text-slate-100 flex flex-col justify-between relative overflow-hidden select-none font-sans">
-      {/* Subtle Background Grid & Glows */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#131a29_1px,transparent_1px),linear-gradient(to_bottom,#131a29_1px,transparent_1px)] bg-[size:48px_48px] opacity-40 pointer-events-none" />
-      <div className="absolute top-[-10%] right-[10%] w-[650px] h-[650px] bg-gradient-to-b from-cyan-600/10 via-indigo-600/5 to-transparent rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[5%] w-[500px] h-[500px] bg-gradient-to-t from-cyan-900/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-[#fcfafb] text-[#150e0f] flex flex-col justify-between relative overflow-hidden select-none font-sans">
+      {/* Subtle Warm Grid & Atmospheric Gradients */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(155,109,119,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(155,109,119,0.06)_1px,transparent_1px)] bg-[size:48px_48px] opacity-70 pointer-events-none" />
+      <div className="absolute top-[-10%] right-[10%] w-[650px] h-[650px] bg-gradient-to-b from-[#9b6d77]/10 via-[#87ada2]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[5%] w-[500px] h-[500px] bg-gradient-to-t from-[#b1cab2]/15 to-transparent rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Header Navbar */}
       <header className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 py-6 flex items-center justify-between">
         {/* Brand Logo */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-400 via-cyan-500 to-indigo-600 flex items-center justify-center text-slate-950 shadow-[0_0_20px_rgba(34,211,238,0.35)]">
-            <svg className="w-5 h-5 text-slate-950" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#9b6d77] via-[#a37680] to-[#87ada2] flex items-center justify-center text-white shadow-md shadow-[#9b6d77]/25">
+            <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="5" r="2.5" />
               <circle cx="6" cy="19" r="2.5" />
               <circle cx="18" cy="19" r="2.5" />
@@ -30,10 +29,10 @@ export default function LandingPage({
             </svg>
           </div>
           <div>
-            <h1 className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
+            <h1 className="font-bold text-base tracking-tight text-[#150e0f] flex items-center gap-1.5">
               Agentic Chase
             </h1>
-            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-slate-400 block -mt-0.5">
+            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#826f74] block -mt-0.5">
               Conversation Intelligence
             </span>
           </div>
@@ -41,11 +40,11 @@ export default function LandingPage({
 
         {/* Top Badges */}
         <div className="flex items-center gap-3">
-          <div className="px-3.5 py-1.5 rounded-full border border-cyan-500/30 bg-[#0d1a2b]/80 backdrop-blur-md text-cyan-300 text-xs font-medium">
+          <div className="px-3.5 py-1.5 rounded-full border border-[#9b6d77]/30 bg-[#f4ecee] text-[#9b6d77] text-xs font-semibold">
             Multi-agent AI
           </div>
-          <div className="px-3.5 py-1.5 rounded-full border border-slate-800 bg-[#0b101c]/80 backdrop-blur-md text-slate-400 text-xs font-mono flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee] animate-pulse" />
+          <div className="px-3.5 py-1.5 rounded-full border border-[#e8dfe2] bg-[#ffffff] shadow-sm text-[#6f5e63] text-xs font-mono flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#87ada2] shadow-[0_0_8px_#87ada2] animate-pulse" />
             LOCALSTORAGE ENABLED
           </div>
         </div>
@@ -56,24 +55,24 @@ export default function LandingPage({
         {/* Left Column: Headlines & Call to Actions */}
         <div className="lg:col-span-7 space-y-7">
           {/* Tagline Pill */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyan-500/20 bg-[#0c1626]/80 backdrop-blur-md text-cyan-300 text-xs font-medium">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#9b6d77]/25 bg-[#f4ecee] text-[#9b6d77] text-xs font-medium">
+            <Sparkles className="w-3.5 h-3.5 text-[#9b6d77]" />
             <span>Your chats have a point of view</span>
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-6xl md:text-[68px] font-black tracking-tight leading-[1.05] text-white">
+          <h1 className="text-4xl sm:text-6xl md:text-[68px] font-black tracking-tight leading-[1.05] text-[#150e0f]">
             Turn chat history <br />
-            <span className="text-[#38bdf8] drop-shadow-[0_0_35px_rgba(56,189,248,0.25)]">
+            <span className="text-[#9b6d77] drop-shadow-sm">
               into actionable
             </span> <br />
-            <span className="text-[#38bdf8] drop-shadow-[0_0_35px_rgba(56,189,248,0.25)]">
+            <span className="text-[#9b6d77] drop-shadow-sm">
               memory.
             </span>
           </h1>
 
           {/* Subtitle Description */}
-          <p className="text-slate-400 text-base sm:text-lg max-w-xl leading-relaxed">
+          <p className="text-[#5e4f53] text-base sm:text-lg max-w-xl leading-relaxed">
             Agentic Chase brings four specialized agents to your exported conversations — so you can understand the dynamic, find the receipts, and reply with context.
           </p>
 
@@ -81,7 +80,7 @@ export default function LandingPage({
           <div className="flex flex-wrap items-center gap-3.5 pt-2">
             <button
               onClick={onLoadScenario}
-              className="px-6 py-3.5 rounded-xl bg-[#22d3ee] hover:bg-[#38bdf8] text-[#070b14] font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-[0_0_30px_rgba(34,211,238,0.35)] transition-all transform hover:scale-[1.02] active:scale-[0.99] cursor-pointer"
+              className="px-6 py-3.5 rounded-xl bg-[#9b6d77] hover:bg-[#865b64] text-white font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-lg shadow-[#9b6d77]/30 transition-all transform hover:scale-[1.02] active:scale-[0.99] cursor-pointer"
             >
               <Zap className="w-4 h-4 fill-current" />
               <span>Load Suman scenario</span>
@@ -90,31 +89,31 @@ export default function LandingPage({
 
             <button
               onClick={onStartBlank}
-              className="px-5 py-3.5 rounded-xl bg-[#0d1424]/90 hover:bg-[#131e36] text-slate-200 border border-[#22314d] hover:border-cyan-500/50 font-medium text-sm sm:text-base flex items-center gap-2 transition cursor-pointer"
+              className="px-5 py-3.5 rounded-xl bg-[#ffffff] hover:bg-[#f9f5f6] text-[#150e0f] border border-[#ded1d5] hover:border-[#9b6d77]/60 font-medium text-sm sm:text-base flex items-center gap-2 shadow-sm transition cursor-pointer"
             >
-              <Plus className="w-4 h-4 text-cyan-400" />
+              <Plus className="w-4 h-4 text-[#87ada2]" />
               <span>Start a blank project</span>
             </button>
           </div>
 
           {/* Feature Badges Row */}
           <div className="flex flex-wrap items-center gap-3 pt-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#1b263b] bg-[#0b101c]/80 text-xs font-mono text-slate-400">
-              <Box className="w-3.5 h-3.5 text-cyan-400" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#e8dfe2] bg-[#ffffff] shadow-sm text-xs font-mono text-[#6f5e63]">
+              <Box className="w-3.5 h-3.5 text-[#9b6d77]" />
               <span>agents</span>
-              <strong className="text-white font-bold ml-1">04</strong>
+              <strong className="text-[#150e0f] font-bold ml-1">04</strong>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#1b263b] bg-[#0b101c]/80 text-xs font-mono text-slate-400">
-              <Quote className="w-3.5 h-3.5 text-cyan-400" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#e8dfe2] bg-[#ffffff] shadow-sm text-xs font-mono text-[#6f5e63]">
+              <Quote className="w-3.5 h-3.5 text-[#87ada2]" />
               <span>grounded refs</span>
-              <strong className="text-white font-bold ml-1">always</strong>
+              <strong className="text-[#150e0f] font-bold ml-1">always</strong>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#1b263b] bg-[#0b101c]/80 text-xs font-mono text-slate-400">
-              <Database className="w-3.5 h-3.5 text-cyan-400" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#e8dfe2] bg-[#ffffff] shadow-sm text-xs font-mono text-[#6f5e63]">
+              <Database className="w-3.5 h-3.5 text-[#b1cab2]" />
               <span>data leaves</span>
-              <strong className="text-white font-bold ml-1">never</strong>
+              <strong className="text-[#150e0f] font-bold ml-1">never</strong>
             </div>
           </div>
         </div>
@@ -123,34 +122,34 @@ export default function LandingPage({
         <div className="lg:col-span-5 relative flex items-center justify-center">
           <div className="relative w-full max-w-md">
             {/* Card 1: Background Left "Conversation signal" */}
-            <div className="w-[85%] rounded-2xl bg-[#0b1220]/90 border border-[#1a283e] p-5 shadow-2xl backdrop-blur-xl">
+            <div className="w-[85%] rounded-2xl bg-[#ffffff] border border-[#e8dfe2] p-5 shadow-xl">
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-200">
-                  <Activity className="w-4 h-4 text-cyan-400" />
+                <div className="flex items-center gap-2 text-xs font-bold text-[#150e0f]">
+                  <Activity className="w-4 h-4 text-[#87ada2]" />
                   <span>Conversation signal</span>
                 </div>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-[#34d399] bg-[#064e3b]/30 border border-[#059669]/40 px-2 py-0.5 rounded">
+                <span className="font-mono text-[9px] uppercase tracking-wider text-[#3d5e40] bg-[#eaf2eb] border border-[#b1cab2]/60 px-2 py-0.5 rounded font-semibold">
                   LIVE DEMO
                 </span>
               </div>
 
-              {/* Stylized Bars Graphic */}
-              <div className="h-28 flex items-end justify-between gap-2 pt-2 px-1 border-b border-[#1a283e]">
-                <div className="w-3 bg-cyan-400/80 rounded-t h-[45%]" />
-                <div className="w-3 bg-cyan-300 rounded-t h-[75%]" />
-                <div className="w-3 bg-indigo-500 rounded-t h-[55%]" />
-                <div className="w-3 bg-indigo-400 rounded-t h-[90%]" />
-                <div className="w-3 bg-cyan-400 rounded-t h-[70%]" />
-                <div className="w-3 bg-cyan-300 rounded-t h-[100%]" />
+              {/* Stylized Frequency Bars Graphic */}
+              <div className="h-28 flex items-end justify-between gap-2 pt-2 px-1 border-b border-[#e8dfe2]">
+                <div className="w-3 bg-[#9b6d77] rounded-t h-[45%]" />
+                <div className="w-3 bg-[#9b6d77]/80 rounded-t h-[75%]" />
+                <div className="w-3 bg-[#87ada2] rounded-t h-[55%]" />
+                <div className="w-3 bg-[#87ada2]/90 rounded-t h-[90%]" />
+                <div className="w-3 bg-[#b1cab2] rounded-t h-[70%]" />
+                <div className="w-3 bg-[#9b6d77] rounded-t h-[100%]" />
               </div>
-              <div className="pt-2 font-mono text-[9px] text-slate-500 uppercase tracking-widest">
+              <div className="pt-2 font-mono text-[9px] text-[#826f74] uppercase tracking-widest">
                 JAN
               </div>
             </div>
 
             {/* Card 2: Foreground Right "AGENT MESH / FOUR PERSPECTIVES" */}
-            <div className="absolute -bottom-8 -right-4 sm:-right-6 w-[90%] rounded-2xl bg-[#070d1a]/95 border border-cyan-500/40 p-5 shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_30px_rgba(34,211,238,0.15)] backdrop-blur-2xl">
-              <div className="text-[10px] font-mono font-semibold tracking-widest text-[#38bdf8] mb-3 uppercase">
+            <div className="absolute -bottom-8 -right-4 sm:-right-6 w-[90%] rounded-2xl bg-[#ffffff] border-2 border-[#87ada2]/50 p-5 shadow-[0_20px_50px_rgba(155,109,119,0.12),0_0_30px_rgba(135,173,162,0.15)]">
+              <div className="text-[10px] font-mono font-bold tracking-widest text-[#9b6d77] mb-3 uppercase">
                 AGENT MESH / FOUR PERSPECTIVES
               </div>
 
@@ -159,47 +158,47 @@ export default function LandingPage({
                 {/* 1. Deep Analyzer */}
                 <div
                   onClick={() => onSelectAgent('deep_analyzer')}
-                  className="p-3 rounded-xl bg-[#0c1424]/90 border border-[#1b2a40] hover:border-cyan-500/50 transition cursor-pointer group"
+                  className="p-3 rounded-xl bg-[#fcfafb] border border-[#ebdada] hover:border-[#9b6d77]/60 transition cursor-pointer group"
                 >
-                  <BarChart3 className="w-4 h-4 text-cyan-400 mb-2 group-hover:scale-110 transition" />
-                  <div className="font-bold text-xs text-white">Deep Analyzer</div>
-                  <div className="text-[10px] text-slate-400 font-mono mt-0.5">grounded in receipts</div>
+                  <BarChart3 className="w-4 h-4 text-[#9b6d77] mb-2 group-hover:scale-110 transition" />
+                  <div className="font-bold text-xs text-[#150e0f]">Deep Analyzer</div>
+                  <div className="text-[10px] text-[#826f74] font-mono mt-0.5">grounded in receipts</div>
                 </div>
 
-                {/* 2. The Roaster (Highlighted as in landingpageimg.png) */}
+                {/* 2. The Roaster (Highlighted) */}
                 <div
                   onClick={() => onSelectAgent('roaster')}
-                  className="p-3 rounded-xl bg-[#0c1527] border-2 border-cyan-400/80 shadow-[0_0_15px_rgba(34,211,238,0.25)] relative cursor-pointer group"
+                  className="p-3 rounded-xl bg-[#fdf8f9] border-2 border-[#9b6d77] shadow-[0_0_15px_rgba(155,109,119,0.2)] relative cursor-pointer group"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <Flame className="w-4 h-4 text-cyan-300 group-hover:scale-110 transition animate-pulse" />
+                    <Flame className="w-4 h-4 text-[#9b6d77] group-hover:scale-110 transition animate-pulse" />
                     {/* Hand / Target cursor circle */}
-                    <div className="w-6 h-6 rounded-full border border-cyan-400/80 bg-cyan-400/10 flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-cyan-300 animate-ping" />
+                    <div className="w-6 h-6 rounded-full border border-[#9b6d77] bg-[#f4ecee] flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#9b6d77] animate-ping" />
                     </div>
                   </div>
-                  <div className="font-bold text-xs text-white">The Roaster</div>
-                  <div className="text-[10px] text-slate-400 font-mono mt-0.5">grounded in receipts</div>
+                  <div className="font-bold text-xs text-[#150e0f]">The Roaster</div>
+                  <div className="text-[10px] text-[#826f74] font-mono mt-0.5">grounded in receipts</div>
                 </div>
 
                 {/* 3. Reply Giver */}
                 <div
                   onClick={() => onSelectAgent('reply_giver')}
-                  className="p-3 rounded-xl bg-[#0c1424]/90 border border-[#1b2a40] hover:border-indigo-500/50 transition cursor-pointer group"
+                  className="p-3 rounded-xl bg-[#fcfafb] border border-[#ebdada] hover:border-[#87ada2]/60 transition cursor-pointer group"
                 >
-                  <MessageSquarePlus className="w-4 h-4 text-indigo-400 mb-2 group-hover:scale-110 transition" />
-                  <div className="font-bold text-xs text-white">Reply Giver</div>
-                  <div className="text-[10px] text-slate-400 font-mono mt-0.5">grounded in receipts</div>
+                  <MessageSquarePlus className="w-4 h-4 text-[#87ada2] mb-2 group-hover:scale-110 transition" />
+                  <div className="font-bold text-xs text-[#150e0f]">Reply Giver</div>
+                  <div className="text-[10px] text-[#826f74] font-mono mt-0.5">grounded in receipts</div>
                 </div>
 
                 {/* 4. Memory Recall */}
                 <div
                   onClick={() => onSelectAgent('memory_recall')}
-                  className="p-3 rounded-xl bg-[#0c1424]/90 border border-[#1b2a40] hover:border-emerald-500/50 transition cursor-pointer group"
+                  className="p-3 rounded-xl bg-[#fcfafb] border border-[#ebdada] hover:border-[#b1cab2]/80 transition cursor-pointer group"
                 >
-                  <History className="w-4 h-4 text-emerald-400 mb-2 group-hover:scale-110 transition" />
-                  <div className="font-bold text-xs text-white">Memory Recall</div>
-                  <div className="text-[10px] text-slate-400 font-mono mt-0.5">grounded in receipts</div>
+                  <History className="w-4 h-4 text-[#87ada2] mb-2 group-hover:scale-110 transition" />
+                  <div className="font-bold text-xs text-[#150e0f]">Memory Recall</div>
+                  <div className="text-[10px] text-[#826f74] font-mono mt-0.5">grounded in receipts</div>
                 </div>
               </div>
             </div>
@@ -207,12 +206,12 @@ export default function LandingPage({
         </div>
       </main>
 
-      {/* Bottom Footer Status Bar matching landingpageimg.png */}
-      <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 py-6 border-t border-[#131b2c] flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-500 text-xs">
+      {/* Bottom Footer Status Bar */}
+      <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 py-6 border-t border-[#e8dfe2] flex flex-col sm:flex-row items-center justify-between gap-3 text-[#826f74] text-xs">
         <div>
           A private, local-first demo for your exported conversation history.
         </div>
-        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-400 flex items-center gap-2">
+        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#826f74] flex items-center gap-2">
           <span>LOCAL STATE</span>
           <span>·</span>
           <span>GROUNDED UX</span>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UploadCloud, FileText, CheckCircle2, AlertCircle, X } from 'lucide-react';
+import { UploadCloud, FileText, CheckCircle2, X } from 'lucide-react';
 
 export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }) {
   const [file, setFile] = useState(null);
@@ -48,22 +48,22 @@ export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
+    <div className="fixed inset-0 z-50 bg-[#150e0f]/50 backdrop-blur-sm flex items-center justify-center p-4 text-[#150e0f]">
+      <div className="bg-[#ffffff] border border-[#e8dfe2] rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition"
+          className="absolute top-4 right-4 p-1.5 text-[#826f74] hover:text-[#150e0f] rounded-lg hover:bg-[#f4ecee] transition cursor-pointer"
         >
           <X className="w-4 h-4" />
         </button>
 
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+          <div className="w-10 h-10 rounded-xl bg-[#f4ecee] border border-[#9b6d77]/30 flex items-center justify-center text-[#9b6d77]">
             <UploadCloud className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-white">Import WhatsApp Chat Export</h2>
-            <p className="text-xs text-slate-400">Automatic participant detection, group/1:1 classification & media parsing</p>
+            <h2 className="text-base font-bold text-[#150e0f]">Import WhatsApp Chat Export</h2>
+            <p className="text-xs text-[#5e4f53]">Automatic participant detection, group/1:1 classification & media parsing</p>
           </div>
         </div>
 
@@ -76,10 +76,10 @@ export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }
             onDrop={handleDrop}
             className={`border-2 border-dashed rounded-xl p-6 text-center transition cursor-pointer relative ${
               dragActive
-                ? 'border-cyan-500 bg-cyan-500/5'
+                ? 'border-[#9b6d77] bg-[#f4ecee]'
                 : file
-                ? 'border-emerald-500/50 bg-emerald-500/5'
-                : 'border-slate-700 hover:border-slate-600 bg-slate-800/40'
+                ? 'border-[#87ada2] bg-[#edf4f2]'
+                : 'border-[#ded1d5] hover:border-[#9b6d77]/60 bg-[#fcfafb]'
             }`}
           >
             <input
@@ -90,17 +90,17 @@ export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }
             />
             {file ? (
               <div className="flex flex-col items-center">
-                <FileText className="w-10 h-10 text-emerald-400 mb-2" />
-                <span className="text-xs font-semibold text-emerald-300">{file.name}</span>
-                <span className="text-[11px] text-slate-400 mt-1">{(file.size / 1024).toFixed(1)} KB</span>
-                <span className="text-[10px] text-cyan-400 underline mt-2">Click or drop another file to replace</span>
+                <FileText className="w-10 h-10 text-[#87ada2] mb-2" />
+                <span className="text-xs font-bold text-[#150e0f]">{file.name}</span>
+                <span className="text-[11px] text-[#6f5e63] mt-1">{(file.size / 1024).toFixed(1)} KB</span>
+                <span className="text-[10px] text-[#9b6d77] underline mt-2 font-medium">Click or drop another file to replace</span>
               </div>
             ) : (
               <div className="flex flex-col items-center">
-                <UploadCloud className="w-10 h-10 text-slate-400 mb-2" />
-                <span className="text-xs font-semibold text-slate-200">Drag & drop your chat export (.txt) here</span>
-                <span className="text-[11px] text-slate-400 mt-1">Supports iOS, Android, 12h/24h bracketed or dash exports</span>
-                <span className="text-xs px-3 py-1 rounded-lg bg-slate-800 text-cyan-400 mt-3 font-medium border border-slate-700">
+                <UploadCloud className="w-10 h-10 text-[#9b6d77] mb-2" />
+                <span className="text-xs font-bold text-[#150e0f]">Drag & drop your chat export (.txt) here</span>
+                <span className="text-[11px] text-[#5e4f53] mt-1">Supports iOS, Android, 12h/24h bracketed or dash exports</span>
+                <span className="text-xs px-3 py-1 rounded-lg bg-[#f4ecee] text-[#9b6d77] mt-3 font-bold border border-[#9b6d77]/30 shadow-sm">
                   Browse File
                 </span>
               </div>
@@ -108,7 +108,7 @@ export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1">
+            <label className="block text-xs font-semibold text-[#150e0f] mb-1">
               Chat Name / Identifier (Optional)
             </label>
             <input
@@ -116,12 +116,12 @@ export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }
               placeholder="e.g. College Friends, Shrimant (1:1), Goa Trip"
               value={chatName}
               onChange={(e) => setChatName(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-100 text-xs focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 rounded-xl bg-[#fcfafb] border border-[#ded1d5] text-[#150e0f] text-xs focus:outline-none focus:border-[#9b6d77]"
             />
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700/60 text-[11px] text-slate-400 flex items-start gap-2">
-            <CheckCircle2 className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+          <div className="p-3 rounded-xl bg-[#fcfafb] border border-[#e8dfe2] text-[11px] text-[#5e4f53] flex items-start gap-2">
+            <CheckCircle2 className="w-4 h-4 text-[#87ada2] flex-shrink-0 mt-0.5" />
             <span>
               The engine will automatically detect participants, compute voice note and media statistics, build conversational memory, and generate participant personas upon ingestion.
             </span>
@@ -132,14 +132,14 @@ export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }
               type="button"
               onClick={onClose}
               disabled={uploading}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition"
+              className="px-4 py-2 rounded-xl bg-[#f4ecee] hover:bg-[#ebdada] text-[#5e4f53] text-xs font-bold transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={!file || uploading}
-              className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white text-xs font-semibold transition flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl bg-[#9b6d77] hover:bg-[#865b64] disabled:opacity-50 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md cursor-pointer"
             >
               {uploading ? 'Processing & Ingesting...' : 'Parse & Ingest Chat'}
             </button>

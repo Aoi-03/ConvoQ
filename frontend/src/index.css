@@ -4,22 +4,24 @@
 
 :root {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  color-scheme: dark;
-  --ink: #f1f5f9;
-  --muted: #8b96aa;
-  --line: #1a2436;
-  --panel: #0d1424;
-  --panel2: #080d19;
-  --cyan: #22d3ee;
-  --indigo: #818cf8;
-  --amber: #fbbf24;
-  --emerald: #34d399;
-  --rose: #fb7185;
+  color-scheme: light;
+  --bg: #fcfafb;
+  --text: #150e0f;
+  --primary: #9b6d77;
+  --primary-hover: #865b64;
+  --primary-light: #f4ecee;
+  --secondary: #b1cab2;
+  --secondary-light: #eaf2eb;
+  --accent: #87ada2;
+  --accent-light: #edf4f2;
+  --border: #e8dfe2;
+  --panel: #ffffff;
+  --muted: #6f5e63;
 }
 
 body {
-  background-color: #070a12;
-  color: var(--ink);
+  background-color: #fcfafb;
+  color: #150e0f;
 }
 
 /* Custom scrollbars */
@@ -29,14 +31,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(11, 16, 28, 0.8);
+  background: rgba(235, 225, 228, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(30, 41, 59, 0.9);
+  background: rgba(155, 109, 119, 0.35);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 189, 248, 0.4);
+  background: rgba(155, 109, 119, 0.6);
 }

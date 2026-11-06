@@ -196,7 +196,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div className="min-h-screen bg-[#fcfafb] text-[#150e0f] flex flex-col">
       <Navbar
         health={health}
         activeProject={activeProject}
@@ -216,21 +216,21 @@ export default function App() {
         />
 
         {/* Main Work Area */}
-        <main className="flex-1 flex flex-col h-[calc(100vh-65px)] overflow-hidden bg-slate-950">
+        <main className="flex-1 flex flex-col h-[calc(100vh-65px)] overflow-hidden bg-[#fcfafb]">
           {!activeProjectId ? (
             <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-4">
-              <div className="w-16 h-16 rounded-3xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shadow-xl shadow-cyan-950/40">
+              <div className="w-16 h-16 rounded-3xl bg-[#f4ecee] border border-[#9b6d77]/30 flex items-center justify-center text-[#9b6d77] shadow-xl shadow-[#9b6d77]/10">
                 <Bot className="w-8 h-8" />
               </div>
-              <h2 className="text-xl font-bold text-white">Welcome to Agentic Chase</h2>
-              <p className="text-xs text-slate-400 max-w-md">
+              <h2 className="text-xl font-bold text-[#150e0f]">Welcome to Agentic Chase</h2>
+              <p className="text-xs text-[#6f5e63] max-w-md">
                 Select an existing project or click <strong>"Load 'Suman' Scenario"</strong> on the left to immediately explore the multi-agent chat intelligence platform.
               </p>
             </div>
           ) : (
             <div className="flex-1 flex flex-col h-full overflow-hidden">
               {/* Workspace Header & Main Tabs */}
-              <div className="border-b border-slate-800 bg-slate-900/40 px-6 py-2.5 flex items-center justify-between">
+              <div className="border-b border-[#e8dfe2] bg-[#ffffff] px-6 py-2.5 flex items-center justify-between shadow-xs">
                 {/* Main Navigation Tabs */}
                 <div className="flex items-center gap-2">
                   {[
@@ -246,8 +246,8 @@ export default function App() {
                         onClick={() => setMainTab(tab.id)}
                         className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition border ${
                           isActive
-                            ? 'bg-cyan-500/10 text-cyan-300 border-cyan-500/40 shadow-sm'
-                            : 'text-slate-400 border-transparent hover:text-slate-200 hover:bg-slate-800/60'
+                            ? 'bg-[#f4ecee] text-[#9b6d77] border-[#9b6d77]/40 shadow-xs'
+                            : 'text-[#6f5e63] border-transparent hover:text-[#150e0f] hover:bg-[#fcfafb]'
                         }`}
                       >
                         <Icon className="w-3.5 h-3.5" />
@@ -260,7 +260,7 @@ export default function App() {
                 {/* Right Action: Ingest WhatsApp Chat */}
                 <button
                   onClick={() => setShowUploadModal(true)}
-                  className="px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs flex items-center gap-1.5 shadow-md shadow-cyan-950/40 transition"
+                  className="px-3 py-1.5 rounded-xl bg-[#9b6d77] hover:bg-[#865b64] text-white font-semibold text-xs flex items-center gap-1.5 shadow-sm shadow-[#9b6d77]/20 transition active:scale-95"
                 >
                   <Upload className="w-3.5 h-3.5" />
                   <span>Import WhatsApp Export</span>
@@ -269,14 +269,14 @@ export default function App() {
 
               {/* Sub-Header / Scope Selector for Agents */}
               {mainTab === 'agents' && (
-                <div className="border-b border-slate-800 bg-slate-900/20 px-6 py-2 flex items-center justify-between">
+                <div className="border-b border-[#e8dfe2] bg-[#fcfafb] px-6 py-2 flex items-center justify-between">
                   {/* Specialized Agent Sub-Tabs */}
                   <div className="flex items-center gap-2">
                     {[
-                      { id: 'deep_analyzer', label: 'Deep Analyzer', icon: BarChart3, color: 'text-cyan-400' },
-                      { id: 'roaster', label: 'The Roaster', icon: Flame, color: 'text-amber-400' },
-                      { id: 'reply_giver', label: 'Reply Giver', icon: MessageSquarePlus, color: 'text-emerald-400' },
-                      { id: 'memory_recall', label: 'Memory Recall', icon: History, color: 'text-purple-400' },
+                      { id: 'deep_analyzer', label: 'Deep Analyzer', icon: BarChart3, color: 'text-[#9b6d77]' },
+                      { id: 'roaster', label: 'The Roaster', icon: Flame, color: 'text-[#c26154]' },
+                      { id: 'reply_giver', label: 'Reply Giver', icon: MessageSquarePlus, color: 'text-[#87ada2]' },
+                      { id: 'memory_recall', label: 'Memory Recall', icon: History, color: 'text-[#7e69ab]' },
                     ].map((ag) => {
                       const Icon = ag.icon;
                       const isActive = agentTab === ag.id;
@@ -284,10 +284,10 @@ export default function App() {
                         <button
                           key={ag.id}
                           onClick={() => setAgentTab(ag.id)}
-                          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium transition ${
+                          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium transition border ${
                             isActive
-                              ? 'bg-slate-800 text-white shadow-sm ring-1 ring-slate-700'
-                              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                              ? 'bg-[#ffffff] text-[#150e0f] shadow-xs border-[#e8dfe2] font-semibold'
+                              : 'text-[#6f5e63] border-transparent hover:text-[#150e0f] hover:bg-[#ffffff]/60'
                           }`}
                         >
                           <Icon className={`w-3.5 h-3.5 ${ag.color}`} />
@@ -299,14 +299,14 @@ export default function App() {
 
                   {/* Scoping Selector: Project vs Specific Chat */}
                   <div className="flex items-center gap-2 text-xs">
-                    <span className="text-slate-400 flex items-center gap-1">
-                      <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                    <span className="text-[#6f5e63] flex items-center gap-1">
+                      <Layers className="w-3.5 h-3.5 text-[#9b6d77]" />
                       Scope:
                     </span>
                     <select
                       value={scopeChatId}
                       onChange={(e) => setScopeChatId(e.target.value)}
-                      className="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-200 text-xs focus:outline-none focus:border-cyan-500"
+                      className="px-2.5 py-1 rounded-lg bg-[#ffffff] border border-[#e8dfe2] text-[#150e0f] text-xs focus:outline-none focus:border-[#9b6d77]"
                     >
                       <option value="">All Chats in Project (Global Context)</option>
                       {projectDetail?.chats?.map((c) => (
@@ -382,10 +382,10 @@ export default function App() {
                 {/* 2. CHATS & INGESTION TAB */}
                 {mainTab === 'chats' && (
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+                    <div className="flex items-center justify-between pb-2 border-b border-[#e8dfe2]">
                       <div>
-                        <h2 className="text-sm font-bold text-white">Project Conversations</h2>
-                        <p className="text-xs text-slate-400">
+                        <h2 className="text-sm font-bold text-[#150e0f]">Project Conversations</h2>
+                        <p className="text-xs text-[#6f5e63]">
                           Automatically classified into Group and 1:1 Personal Conversations with isolated context.
                         </p>
                       </div>
@@ -395,19 +395,19 @@ export default function App() {
                       {projectDetail?.chats?.map((c) => (
                         <div
                           key={c.id}
-                          className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition space-y-3"
+                          className="p-4 rounded-2xl bg-[#ffffff] border border-[#e8dfe2] hover:border-[#9b6d77]/40 shadow-xs transition space-y-3"
                         >
                           <div className="flex items-start justify-between">
                             <div className="flex items-center gap-2.5">
-                              <div className="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                              <div className="w-9 h-9 rounded-xl bg-[#f4ecee] border border-[#9b6d77]/20 flex items-center justify-center text-[#9b6d77]">
                                 {c.chat_type === 'group' ? <Users className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
                               </div>
                               <div>
-                                <h3 className="font-bold text-sm text-white">{c.name}</h3>
+                                <h3 className="font-bold text-sm text-[#150e0f]">{c.name}</h3>
                                 <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
                                   c.chat_type === 'group'
-                                    ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
-                                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                    ? 'bg-[#edf4f2] text-[#4b7a70] border border-[#87ada2]/30'
+                                    : 'bg-[#eaf2eb] text-[#476e48] border border-[#b1cab2]/40'
                                 }`}>
                                   {c.chat_type === 'group' ? 'Group Chat' : '1:1 Personal'}
                                 </span>
@@ -418,32 +418,32 @@ export default function App() {
                                 setViewingChat(c);
                                 setShowChatViewer(true);
                               }}
-                              className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 flex items-center gap-1 border border-slate-700 transition"
+                              className="px-2.5 py-1 rounded-lg bg-[#fcfafb] hover:bg-[#f4ecee] text-xs font-semibold text-[#150e0f] flex items-center gap-1 border border-[#e8dfe2] transition"
                             >
                               <Eye className="w-3.5 h-3.5" />
                               <span>View Log</span>
                             </button>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-400 py-1 bg-slate-800/40 rounded-xl px-3 border border-slate-800">
+                          <div className="grid grid-cols-2 gap-2 text-[11px] text-[#6f5e63] py-1.5 bg-[#fcfafb] rounded-xl px-3 border border-[#e8dfe2]">
                             <div>
                               <span>Total Messages:</span>
-                              <strong className="block text-slate-200">{c.total_messages}</strong>
+                              <strong className="block text-[#150e0f]">{c.total_messages}</strong>
                             </div>
                             <div>
                               <span>Media Attachments:</span>
-                              <strong className="block text-cyan-400">{c.total_media}</strong>
+                              <strong className="block text-[#9b6d77]">{c.total_media}</strong>
                             </div>
                           </div>
 
-                          <div className="flex items-center justify-between pt-1 text-[11px] text-slate-500">
+                          <div className="flex items-center justify-between pt-1 text-[11px] text-[#826f74]">
                             <span>Imported: {c.created_at ? new Date(c.created_at).toLocaleDateString() : 'Recent'}</span>
                             <button
                               onClick={() => {
                                 setScopeChatId(c.id);
                                 setMainTab('agents');
                               }}
-                              className="text-cyan-400 hover:underline font-medium"
+                              className="text-[#9b6d77] hover:underline font-semibold"
                             >
                               Interact with Agents &rarr;
                             </button>

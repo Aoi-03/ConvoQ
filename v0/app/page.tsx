@@ -19,14 +19,14 @@ export default function Page() {
 
   return (
     <div>
-      <div className="bg-[#090e1a] border-b border-[#1b2538] px-6 py-2 flex items-center justify-between text-xs text-slate-400">
+      <div className="bg-[#fcfafb] border-b border-[#e8dfe2] px-6 py-2 flex items-center justify-between text-xs text-[#6f5e63]">
         <button
           onClick={() => setView('landing')}
-          className="flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300 font-medium transition"
+          className="flex items-center gap-1.5 text-[#9b6d77] hover:text-[#865b64] font-semibold transition"
         >
           ← Return to Landing Page
         </button>
-        <span className="font-mono text-[10px] text-slate-500">AGENTIC CHASE ACTIVE WORKSPACE</span>
+        <span className="font-mono text-[10px] text-[#826f74]">AGENTIC CHASE ACTIVE WORKSPACE</span>
       </div>
       <AgenticChase />
     </div>
