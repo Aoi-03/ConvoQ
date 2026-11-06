@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Zap, ArrowRight, Plus, Box, Quote, Database, Activity,
-  BarChart3, Flame, MessageSquarePlus, History, Sparkles
+  BarChart3, Flame, MessageSquarePlus, History, Sparkles,
+  Radio, CheckCircle2
 } from 'lucide-react';
 
 export default function LandingPage({
@@ -9,6 +10,65 @@ export default function LandingPage({
   onStartBlank,
   onSelectAgent
 }) {
+  // Animated auto-cycling active agent index (0: Deep Analyzer, 1: Roaster, 2: Reply Giver, 3: Memory Recall)
+  const [activeAgentIndex, setActiveAgentIndex] = useState(1);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const agentItems = [
+    {
+      key: 'deep_analyzer',
+      name: 'Deep Analyzer',
+      tag: 'grounded in receipts',
+      icon: BarChart3,
+      color: 'text-[#9b6d77]',
+      activeBorder: 'border-[#9b6d77]',
+      activeBg: 'bg-[#fdf8f9]',
+      glow: 'shadow-[0_0_20px_rgba(155,109,119,0.2)]',
+      badge: '94% clarity · receipts detected',
+    },
+    {
+      key: 'roaster',
+      name: 'The Roaster',
+      tag: 'grounded in receipts',
+      icon: Flame,
+      color: 'text-[#9b6d77]',
+      activeBorder: 'border-[#9b6d77]',
+      activeBg: 'bg-[#fdf8f9]',
+      glow: 'shadow-[0_0_20px_rgba(155,109,119,0.22)]',
+      badge: 'Target: Shrimant · 14 receipts',
+    },
+    {
+      key: 'reply_giver',
+      name: 'Reply Giver',
+      tag: 'grounded in receipts',
+      icon: MessageSquarePlus,
+      color: 'text-[#87ada2]',
+      activeBorder: 'border-[#87ada2]',
+      activeBg: 'bg-[#f5faf8]',
+      glow: 'shadow-[0_0_20px_rgba(135,173,162,0.22)]',
+      badge: '3 tones · participant clone',
+    },
+    {
+      key: 'memory_recall',
+      name: 'Memory Recall',
+      tag: 'grounded in receipts',
+      icon: History,
+      color: 'text-[#87ada2]',
+      activeBorder: 'border-[#87ada2]',
+      activeBg: 'bg-[#f5faf8]',
+      glow: 'shadow-[0_0_20px_rgba(135,173,162,0.22)]',
+      badge: '2 dates · split debt found',
+    },
+  ];
+
+  // Auto-cycle through the 4 agents every 3.2s when not manually hovered
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setActiveAgentIndex((prev) => (prev + 1) % agentItems.length);
+    }, 3200);
+    return () => clearInterval(interval);
+  }, [isPaused, agentItems.length]);
   return (
     <div className="min-h-screen bg-[#fcfafb] text-[#150e0f] flex flex-col justify-between relative overflow-hidden select-none font-sans">
       {/* Subtle Warm Grid & Atmospheric Gradients */}
@@ -118,88 +178,121 @@ export default function LandingPage({
           </div>
         </div>
 
-        {/* Right Column: Visual Showcase Matching landingpageimg.png */}
+        {/* Right Column: Visual Showcase Matching landingpageimg.png with Live Smooth Animations */}
         <div className="lg:col-span-5 relative flex items-center justify-center">
           <div className="relative w-full max-w-md">
-            {/* Card 1: Background Left "Conversation signal" */}
-            <div className="w-[85%] rounded-2xl bg-[#ffffff] border border-[#e8dfe2] p-5 shadow-xl">
+            {/* Card 1: Background Left "Conversation signal" with Live Equalizer & Levitation */}
+            <div className="w-[85%] rounded-2xl bg-[#ffffff] border border-[#e8dfe2] p-5 shadow-xl animate-float-reverse transition-all">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 text-xs font-bold text-[#150e0f]">
-                  <Activity className="w-4 h-4 text-[#87ada2]" />
+                  <Activity className="w-4 h-4 text-[#87ada2] animate-pulse" />
                   <span>Conversation signal</span>
                 </div>
-                <span className="font-mono text-[9px] uppercase tracking-wider text-[#3d5e40] bg-[#eaf2eb] border border-[#b1cab2]/60 px-2 py-0.5 rounded font-semibold">
-                  LIVE DEMO
-                </span>
+                <div className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-[#3d5e40] bg-[#eaf2eb] border border-[#b1cab2]/60 px-2 py-0.5 rounded font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#48684a] animate-ping" />
+                  <span>LIVE DEMO</span>
+                </div>
               </div>
 
-              {/* Stylized Frequency Bars Graphic */}
-              <div className="h-28 flex items-end justify-between gap-2 pt-2 px-1 border-b border-[#e8dfe2]">
-                <div className="w-3 bg-[#9b6d77] rounded-t h-[45%]" />
-                <div className="w-3 bg-[#9b6d77]/80 rounded-t h-[75%]" />
-                <div className="w-3 bg-[#87ada2] rounded-t h-[55%]" />
-                <div className="w-3 bg-[#87ada2]/90 rounded-t h-[90%]" />
-                <div className="w-3 bg-[#b1cab2] rounded-t h-[70%]" />
-                <div className="w-3 bg-[#9b6d77] rounded-t h-[100%]" />
+              {/* Animated Rhythmic Frequency Bars Waveform */}
+              <div className="h-28 flex items-end justify-between gap-2 pt-2 px-1 border-b border-[#e8dfe2] relative">
+                <div className="w-2.5 sm:w-3 bg-[#9b6d77] rounded-t bar-anim-1 transition-all duration-300" />
+                <div className="w-2.5 sm:w-3 bg-[#9b6d77]/80 rounded-t bar-anim-2 transition-all duration-300" />
+                <div className="w-2.5 sm:w-3 bg-[#87ada2] rounded-t bar-anim-3 transition-all duration-300" />
+                <div className="w-2.5 sm:w-3 bg-[#87ada2]/90 rounded-t bar-anim-4 transition-all duration-300" />
+                <div className="w-2.5 sm:w-3 bg-[#b1cab2] rounded-t bar-anim-5 transition-all duration-300" />
+                <div className="w-2.5 sm:w-3 bg-[#9b6d77] rounded-t bar-anim-6 transition-all duration-300" />
+                <div className="w-2.5 sm:w-3 bg-[#87ada2] rounded-t bar-anim-7 transition-all duration-300" />
+                <div className="w-2.5 sm:w-3 bg-[#b1cab2] rounded-t bar-anim-8 transition-all duration-300" />
               </div>
-              <div className="pt-2 font-mono text-[9px] text-[#826f74] uppercase tracking-widest">
-                JAN
+              <div className="pt-2.5 flex items-center justify-between font-mono text-[9px] text-[#826f74] uppercase tracking-widest">
+                <span>JAN</span>
+                <span className="text-[#87ada2] font-semibold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#87ada2] animate-pulse" />
+                  13.6K MSGS STREAMING
+                </span>
               </div>
             </div>
 
-            {/* Card 2: Foreground Right "AGENT MESH / FOUR PERSPECTIVES" */}
-            <div className="absolute -bottom-8 -right-4 sm:-right-6 w-[90%] rounded-2xl bg-[#ffffff] border-2 border-[#87ada2]/50 p-5 shadow-[0_20px_50px_rgba(155,109,119,0.12),0_0_30px_rgba(135,173,162,0.15)]">
-              <div className="text-[10px] font-mono font-bold tracking-widest text-[#9b6d77] mb-3 uppercase">
-                AGENT MESH / FOUR PERSPECTIVES
+            {/* Card 2: Foreground Right "AGENT MESH / FOUR PERSPECTIVES" with Live Radar Targeting & Gentle Float */}
+            <div
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              className="absolute -bottom-8 -right-4 sm:-right-6 w-[90%] rounded-2xl bg-[#ffffff] border-2 border-[#87ada2]/60 p-5 shadow-[0_20px_50px_rgba(155,109,119,0.14),0_0_30px_rgba(135,173,162,0.18)] animate-float-slow transition-all relative overflow-hidden"
+            >
+              {/* Subtle Scanning Lightbeam Effect */}
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#9b6d77] to-transparent animate-scanline pointer-events-none" />
+
+              <div className="flex items-center justify-between mb-2.5">
+                <div className="text-[10px] font-mono font-bold tracking-widest text-[#9b6d77] uppercase flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#9b6d77] animate-ping" />
+                  AGENT MESH / FOUR PERSPECTIVES
+                </div>
+                <div className="text-[9px] font-mono text-[#826f74] uppercase">
+                  {isPaused ? 'Interactive' : 'Auto-Scan'}
+                </div>
               </div>
 
-              {/* 2x2 Agent Grid */}
+              {/* Real-time Agent Status Ticker */}
+              <div className="mb-3 px-2.5 py-1 rounded-lg bg-[#fcfafb] border border-[#ebdada] flex items-center justify-between text-[10px] font-mono text-[#6f5e63]">
+                <span className="font-semibold text-[#150e0f] flex items-center gap-1.5 truncate">
+                  <Radio className="w-3 h-3 text-[#9b6d77] animate-pulse" />
+                  {agentItems[activeAgentIndex]?.name}
+                </span>
+                <span className="text-[#826f74] text-[9px] truncate ml-1">
+                  {agentItems[activeAgentIndex]?.badge}
+                </span>
+              </div>
+
+              {/* 2x2 Interactive Agent Grid with Smooth Reticle Transitions */}
               <div className="grid grid-cols-2 gap-2.5">
-                {/* 1. Deep Analyzer */}
-                <div
-                  onClick={() => onSelectAgent('deep_analyzer')}
-                  className="p-3 rounded-xl bg-[#fcfafb] border border-[#ebdada] hover:border-[#9b6d77]/60 transition cursor-pointer group"
-                >
-                  <BarChart3 className="w-4 h-4 text-[#9b6d77] mb-2 group-hover:scale-110 transition" />
-                  <div className="font-bold text-xs text-[#150e0f]">Deep Analyzer</div>
-                  <div className="text-[10px] text-[#826f74] font-mono mt-0.5">grounded in receipts</div>
-                </div>
+                {agentItems.map((item, idx) => {
+                  const Icon = item.icon;
+                  const isActive = activeAgentIndex === idx;
 
-                {/* 2. The Roaster (Highlighted) */}
-                <div
-                  onClick={() => onSelectAgent('roaster')}
-                  className="p-3 rounded-xl bg-[#fdf8f9] border-2 border-[#9b6d77] shadow-[0_0_15px_rgba(155,109,119,0.2)] relative cursor-pointer group"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <Flame className="w-4 h-4 text-[#9b6d77] group-hover:scale-110 transition animate-pulse" />
-                    {/* Hand / Target cursor circle */}
-                    <div className="w-6 h-6 rounded-full border border-[#9b6d77] bg-[#f4ecee] flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#9b6d77] animate-ping" />
+                  return (
+                    <div
+                      key={item.key}
+                      onClick={() => onSelectAgent(item.key)}
+                      onMouseEnter={() => {
+                        setActiveAgentIndex(idx);
+                        setIsPaused(true);
+                      }}
+                      className={`p-3 rounded-xl transition-all duration-300 cursor-pointer group relative ${
+                        isActive
+                          ? `border-2 ${item.activeBorder} ${item.activeBg} ${item.glow} scale-[1.02] ring-1 ring-[#9b6d77]/20`
+                          : 'border border-[#ebdada] bg-[#fcfafb] hover:border-[#9b6d77]/50 hover:bg-[#ffffff] hover:scale-[1.01]'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <Icon
+                          className={`w-4 h-4 ${item.color} transition-transform duration-300 ${
+                            isActive ? 'scale-110 animate-bounce' : 'group-hover:scale-110'
+                          }`}
+                        />
+
+                        {/* Animated Target Cursor Reticle for the Active Agent */}
+                        {isActive ? (
+                          <div className="w-6 h-6 rounded-full border border-[#9b6d77] bg-[#f4ecee] flex items-center justify-center relative shadow-xs">
+                            <div className="w-2.5 h-2.5 rounded-full bg-[#9b6d77]/30 animate-ping absolute" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#9b6d77]" />
+                          </div>
+                        ) : (
+                          <div className="w-4 h-4 rounded-full border border-[#e8dfe2] group-hover:border-[#9b6d77]/40 flex items-center justify-center transition">
+                            <div className="w-1 h-1 rounded-full bg-transparent group-hover:bg-[#9b6d77]/40 transition" />
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="font-bold text-xs text-[#150e0f] group-hover:text-[#9b6d77] transition-colors">
+                        {item.name}
+                      </div>
+                      <div className="text-[10px] text-[#826f74] font-mono mt-0.5">
+                        {item.tag}
+                      </div>
                     </div>
-                  </div>
-                  <div className="font-bold text-xs text-[#150e0f]">The Roaster</div>
-                  <div className="text-[10px] text-[#826f74] font-mono mt-0.5">grounded in receipts</div>
-                </div>
-
-                {/* 3. Reply Giver */}
-                <div
-                  onClick={() => onSelectAgent('reply_giver')}
-                  className="p-3 rounded-xl bg-[#fcfafb] border border-[#ebdada] hover:border-[#87ada2]/60 transition cursor-pointer group"
-                >
-                  <MessageSquarePlus className="w-4 h-4 text-[#87ada2] mb-2 group-hover:scale-110 transition" />
-                  <div className="font-bold text-xs text-[#150e0f]">Reply Giver</div>
-                  <div className="text-[10px] text-[#826f74] font-mono mt-0.5">grounded in receipts</div>
-                </div>
-
-                {/* 4. Memory Recall */}
-                <div
-                  onClick={() => onSelectAgent('memory_recall')}
-                  className="p-3 rounded-xl bg-[#fcfafb] border border-[#ebdada] hover:border-[#b1cab2]/80 transition cursor-pointer group"
-                >
-                  <History className="w-4 h-4 text-[#87ada2] mb-2 group-hover:scale-110 transition" />
-                  <div className="font-bold text-xs text-[#150e0f]">Memory Recall</div>
-                  <div className="text-[10px] text-[#826f74] font-mono mt-0.5">grounded in receipts</div>
-                </div>
+                  );
+                })}
               </div>
             </div>
           </div>

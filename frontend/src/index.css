@@ -42,3 +42,87 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(155, 109, 119, 0.6);
 }
+
+/* Landing Page Smooth Animations */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@keyframes barPulse1 {
+  0%, 100% { height: 38%; }
+  50% { height: 88%; }
+}
+@keyframes barPulse2 {
+  0%, 100% { height: 75%; }
+  50% { height: 35%; }
+}
+@keyframes barPulse3 {
+  0%, 100% { height: 48%; }
+  50% { height: 95%; }
+}
+@keyframes barPulse4 {
+  0%, 100% { height: 82%; }
+  50% { height: 42%; }
+}
+@keyframes barPulse5 {
+  0%, 100% { height: 58%; }
+  50% { height: 98%; }
+}
+@keyframes barPulse6 {
+  0%, 100% { height: 32%; }
+  50% { height: 78%; }
+}
+@keyframes barPulse7 {
+  0%, 100% { height: 90%; }
+  50% { height: 45%; }
+}
+@keyframes barPulse8 {
+  0%, 100% { height: 62%; }
+  50% { height: 38%; }
+}
+
+@keyframes scanline {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+@keyframes radarSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-float-slow {
+  animation: floatSlow 5.5s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 6.5s ease-in-out infinite;
+}
+
+.bar-anim-1 { animation: barPulse1 1.6s ease-in-out infinite; }
+.bar-anim-2 { animation: barPulse2 2.1s ease-in-out infinite; }
+.bar-anim-3 { animation: barPulse3 1.4s ease-in-out infinite; }
+.bar-anim-4 { animation: barPulse4 1.9s ease-in-out infinite; }
+.bar-anim-5 { animation: barPulse5 1.5s ease-in-out infinite; }
+.bar-anim-6 { animation: barPulse6 2.3s ease-in-out infinite; }
+.bar-anim-7 { animation: barPulse7 1.7s ease-in-out infinite; }
+.bar-anim-8 { animation: barPulse8 2.0s ease-in-out infinite; }
+
+.animate-scanline {
+  animation: scanline 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
