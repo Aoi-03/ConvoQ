@@ -77,7 +77,7 @@ export default function SettingsModal({ isOpen, onClose, health, onSaveSettings 
           </div>
 
           <div className="p-3 rounded-xl bg-[#edf4f2] border border-[#87ada2]/30 text-[11px] text-[#4b7a70]">
-            <strong>Hybrid Architecture:</strong> If no API key is entered, Agentic Chase automatically executes with intelligent deterministic offline algorithms, BM25 retrieval, and mathematical stylometric modeling!
+            <strong>Hybrid Architecture:</strong> If no API key is entered, ConvoQ automatically executes with intelligent deterministic offline algorithms, BM25 retrieval, and mathematical stylometric modeling!
           </div>
 
           <div className="flex items-center justify-end gap-2 pt-2">

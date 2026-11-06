@@ -1,6 +1,6 @@
-# Agentic Chase: Multi-Agent Chat Intelligence Platform
+# ConvoQ: Multi-Agent Chat Intelligence Platform
 
-> **Agentic Chase** processes exported conversations (WhatsApp group chats & 1-on-1 chats), extracts participant personas, performs multimodal media analysis (voice notes, images, videos), and provides specialized AI agents for deep conversation analysis, playful roasting, smart reply generation, and verifiable memory recall.
+> **ConvoQ** processes exported conversations (WhatsApp group chats & 1-on-1 chats), extracts participant personas, performs multimodal media analysis (voice notes, images, videos), and provides specialized AI agents for deep conversation analysis, playful roasting, smart reply generation, and verifiable memory recall.
 
 ---
 

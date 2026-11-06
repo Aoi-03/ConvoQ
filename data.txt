@@ -1,4 +1,4 @@
-Agentic Chase: Multi-Agent Chat Intelligence Platform
+ConvoQ: Multi-Agent Chat Intelligence Platform (formerly Agentic Chase)
 Overview
 People's meaningful conversations are stored in chat exports from friend groups, college groups, and personal chats. These conversations contain valuable context, memories, relationships, inside jokes, and discussions, but are difficult to search and understand manually. Build an agentic AI platform that processes exported conversations, understands participants and their personalities, and provides specialized AI agents to analyse, interact with, and retrieve insights from chat history.
 

@@ -90,7 +90,7 @@ export default function LandingPage({
           </div>
           <div>
             <h1 className="font-bold text-base tracking-tight text-[#150e0f] flex items-center gap-1.5">
-              Agentic Chase
+              ConvoQ
             </h1>
             <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#826f74] block -mt-0.5">
               Conversation Intelligence
@@ -133,7 +133,7 @@ export default function LandingPage({
 
           {/* Subtitle Description */}
           <p className="text-[#5e4f53] text-base sm:text-lg max-w-xl leading-relaxed">
-            Agentic Chase brings four specialized agents to your exported conversations — so you can understand the dynamic, find the receipts, and reply with context.
+            ConvoQ brings four specialized agents to your exported conversations — so you can understand the dynamic, find the receipts, and reply with context.
           </p>
 
           {/* Primary Action Buttons */}

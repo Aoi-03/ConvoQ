@@ -222,7 +222,7 @@ export default function App() {
               <div className="w-16 h-16 rounded-3xl bg-[#f4ecee] border border-[#9b6d77]/30 flex items-center justify-center text-[#9b6d77] shadow-xl shadow-[#9b6d77]/10">
                 <Bot className="w-8 h-8" />
               </div>
-              <h2 className="text-xl font-bold text-[#150e0f]">Welcome to Agentic Chase</h2>
+              <h2 className="text-xl font-bold text-[#150e0f]">Welcome to ConvoQ</h2>
               <p className="text-xs text-[#6f5e63] max-w-md">
                 Select an existing project or click <strong>"Load 'Suman' Scenario"</strong> on the left to immediately explore the multi-agent chat intelligence platform.
               </p>

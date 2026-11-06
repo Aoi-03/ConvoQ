@@ -1,6 +1,6 @@
-# AI Frontend Generation Guide: Agentic Chase
+# AI Frontend Generation Guide: ConvoQ
 
-Use this document to generate an ultra-cool, modern frontend for **Agentic Chase** using AI builder tools such as **v0.dev**, **Lovable.dev**, **Bolt.new**, **Cursor**, **Windsurf**, or **Claude Artifacts**.
+Use this document to generate an ultra-cool, modern frontend for **ConvoQ** using AI builder tools such as **v0.dev**, **Lovable.dev**, **Bolt.new**, **Cursor**, **Windsurf**, or **Claude Artifacts**.
 
 ---
 
@@ -9,7 +9,7 @@ Use this document to generate an ultra-cool, modern frontend for **Agentic Chase
 Copy and paste the block below directly into your AI tool (e.g. v0.dev, Lovable, Bolt.new, or Cursor Composer):
 
 ```markdown
-Build a futuristic, dark-mode, multi-agent AI chat intelligence platform named "Agentic Chase".
+Build a futuristic, multi-agent AI chat intelligence platform named "ConvoQ".
 The app analyzes exported conversations (WhatsApp group and 1-on-1 chats), generates participant personas, provides multimodal media stats, and deploys 4 specialized AI agents with grounded evidence citations.
 
 ### 🎨 Design System & Aesthetic
@@ -130,7 +130,7 @@ If you want the newly generated frontend to talk directly to this Python FastAPI
 ## 💾 LocalStorage Key Schema (Pure Frontend Mode)
 
 When running without any backend or database, store data under these keys:
-- `agentic_chase_projects`: `[ { id, name, description, created_at, updated_at, chat_count, total_messages } ]`
-- `agentic_chase_chats`: `[ { id, project_id, name, chat_type ("group"|"one_to_one"), total_messages, total_media, participants } ]`
-- `agentic_chase_personas`: `[ { id, project_id, name, group_role, communication_style, emoji_fingerprint, quirks, activity_patterns } ]`
-- `agentic_chase_messages`: `[ { id, project_id, chat_id, timestamp, sender, content, media_type, media_summary } ]`
+- `convoq_projects` (or legacy `agentic_chase_projects`): `[ { id, name, description, created_at, updated_at, chat_count, total_messages } ]`
+- `convoq_chats` (or legacy `agentic_chase_chats`): `[ { id, project_id, name, chat_type ("group"|"one_to_one"), total_messages, total_media, participants } ]`
+- `convoq_personas` (or legacy `agentic_chase_personas`): `[ { id, project_id, name, group_role, communication_style, emoji_fingerprint, quirks, activity_patterns } ]`
+- `convoq_messages` (or legacy `agentic_chase_messages`): `[ { id, project_id, chat_id, timestamp, sender, content, media_type, media_summary } ]`

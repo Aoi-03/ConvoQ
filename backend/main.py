@@ -35,7 +35,7 @@ from backend.agents.memory_recall import MemoryRecallAgent
 init_db()
 
 app = FastAPI(
-    title="Agentic Chase: Multi-Agent Chat Intelligence Platform",
+    title="ConvoQ: Multi-Agent Chat Intelligence Platform",
     description="Processes exported conversations, understands participant personas, and deploys specialized AI agents.",
     version="1.0.0"
 )

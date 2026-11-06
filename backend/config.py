@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = BASE_DIR.parent
 DATA_DIR = BASE_DIR / "data"
 UPLOAD_DIR = DATA_DIR / "uploads"
-DB_PATH = DATA_DIR / "agentic_chase.db"
+DB_PATH = DATA_DIR / "convoq.db"
 
 # Create required directories
 DATA_DIR.mkdir(parents=True, exist_ok=True)

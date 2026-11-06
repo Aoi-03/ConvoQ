@@ -21,7 +21,7 @@ export default function Navbar({ activeProject, onBackToLanding }) {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="font-bold text-sm tracking-tight text-[#150e0f] group-hover:text-[#9b6d77] transition">
-              Agentic Chase
+              ConvoQ
             </h1>
             <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 rounded bg-[#f4ecee] text-[#9b6d77] border border-[#9b6d77]/20 font-semibold">
               Workspace

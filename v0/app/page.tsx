@@ -26,7 +26,7 @@ export default function Page() {
         >
           ← Return to Landing Page
         </button>
-        <span className="font-mono text-[10px] text-[#826f74]">AGENTIC CHASE ACTIVE WORKSPACE</span>
+        <span className="font-mono text-[10px] text-[#826f74]">CONVOQ ACTIVE WORKSPACE</span>
       </div>
       <AgenticChase />
     </div>

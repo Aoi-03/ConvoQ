@@ -1,6 +1,15 @@
 // Pure Browser LocalStorage Engine - Zero Database Required
 
 const KEYS = {
+  PROJECTS: 'convoq_projects',
+  CHATS: 'convoq_chats',
+  MESSAGES: 'convoq_messages',
+  PERSONAS: 'convoq_personas',
+  MEMORIES: 'convoq_memories',
+  CONVERSATIONS: 'convoq_agent_conversations',
+};
+
+const LEGACY_KEYS = {
   PROJECTS: 'agentic_chase_projects',
   CHATS: 'agentic_chase_chats',
   MESSAGES: 'agentic_chase_messages',
@@ -11,7 +20,14 @@ const KEYS = {
 
 function getFromStorage(key, defaultValue = {}) {
   try {
-    const raw = localStorage.getItem(key);
+    let raw = localStorage.getItem(key);
+    if (!raw) {
+      // Check backwards-compatibility legacy key
+      const legacyKeyEntry = Object.keys(KEYS).find((k) => KEYS[k] === key);
+      if (legacyKeyEntry && LEGACY_KEYS[legacyKeyEntry]) {
+        raw = localStorage.getItem(LEGACY_KEYS[legacyKeyEntry]);
+      }
+    }
     return raw ? JSON.parse(raw) : defaultValue;
   } catch (e) {
     console.warn(`LocalStorage read failed for ${key}:`, e);

@@ -25,8 +25,8 @@ const personas = [
 
 function loadScenario() {
   const project = { id: 'suman-scenario', name: 'Suman Scenario', description: 'College Friends + Shrimant', created_at: new Date().toISOString(), chat_count: 2, total_messages: 13688 }
-  localStorage.setItem('agentic_chase_projects', JSON.stringify([project]))
-  localStorage.setItem('agentic_chase_chats', JSON.stringify(chats))
+  localStorage.setItem('convoq_projects', JSON.stringify([project]))
+  localStorage.setItem('convoq_chats', JSON.stringify(chats))
   return project
 }
 
@@ -41,7 +41,7 @@ export default function AgenticChase() {
   const [showNew, setShowNew] = useState(false)
 
   useEffect(() => {
-    const saved = localStorage.getItem('agentic_chase_projects')
+    const saved = localStorage.getItem('convoq_projects') || localStorage.getItem('agentic_chase_projects')
     if (saved) setProject(JSON.parse(saved)[0])
   }, [])
   const activeChat = chats[selectedChat]
@@ -58,9 +58,9 @@ export default function AgenticChase() {
 
   return <main className="ac-shell">
     <header className="ac-header">
-      <div className="brand"><div className="brand-mark"><Zap size={18} fill="currentColor" /></div><div><div className="brand-name">agentic <span>chase</span></div><div className="brand-sub">conversation intelligence</div></div></div>
+      <div className="brand"><div className="brand-mark"><Zap size={18} fill="currentColor" /></div><div><div className="brand-name">convo<span>Q</span></div><div className="brand-sub">conversation intelligence</div></div></div>
       <div className="header-center"><div className="project-pill"><span className="status-dot" />{project?.name || 'No project loaded'}<ChevronDown size={14} /></div><div className="local-pill"><Database size={13} /> Local storage enabled</div></div>
-      <div className="header-actions"><button className="icon-button" aria-label="Help"><CircleHelp size={18} /></button><button className="avatar">AC</button></div>
+      <div className="header-actions"><button className="icon-button" aria-label="Help"><CircleHelp size={18} /></button><button className="avatar">CQ</button></div>
     </header>
     <div className="ac-body">
       <aside className="sidebar">
