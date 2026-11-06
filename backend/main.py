@@ -472,3 +472,25 @@ def get_conversation_history(conv_id: str):
             for m in messages
         ]
     }
+
+
+# --- Static Frontend Serving ---
+
+from fastapi.responses import FileResponse
+from backend.config import PROJECT_ROOT
+
+FRONTEND_DIST = PROJECT_ROOT / "frontend" / "dist"
+if FRONTEND_DIST.exists():
+    assets_dir = FRONTEND_DIST / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
+
+    @app.get("/{full_path:path}")
+    def serve_frontend(full_path: str):
+        if full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="API endpoint not found")
+        file_path = FRONTEND_DIST / full_path
+        if file_path.is_file():
+            return FileResponse(file_path)
+        return FileResponse(FRONTEND_DIST / "index.html")
+
