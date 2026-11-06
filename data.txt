@@ -1,0 +1,102 @@
+Agentic Chase: Multi-Agent Chat Intelligence Platform
+Overview
+People's meaningful conversations are stored in chat exports from friend groups, college groups, and personal chats. These conversations contain valuable context, memories, relationships, inside jokes, and discussions, but are difficult to search and understand manually. Build an agentic AI platform that processes exported conversations, understands participants and their personalities, and provides specialized AI agents to analyse, interact with, and retrieve insights from chat history.
+
+Required Capabilities
+Create projects containing multiple independent group and one-to-one chats.
+Upload and process exported chat files with or without media.
+Automatically identify participants and distinguish group chats from personal conversations.
+Analyse images, summarize videos, and transcribe voice notes.
+Build persistent conversational memory containing topics, timelines, relationships, inside jokes, and communication patterns.
+Generate individual participant personas based on communication style, interests, humour, and group roles.
+Provide specialized AI agents for conversation analysis, personalized roasting, and reply generation.
+Allow users to interact with agents about an entire project, a specific chat, or an individual participant.
+Generate responses grounded in actual conversation history with relevant chat references.
+Agent Tools
+✦
+Chat export parser
+✦
+Participant detection
+✦
+Multimodal media processing
+✦
+Voice transcription
+✦
+Conversation summarization
+✦
+Persistent memory and vector retrieval
+✦
+Participant persona generator
+✦
+Deep Analyzer agent
+✦
+Roaster agent
+✦
+Reply Giver agent
+✦
+Memory Recall agent (Bonus)
+✦
+Evidence retrieval and citation
+Example Scenario
+Input: A user creates a project named 'Suman' and uploads two conversations: a College Friends group chat containing 20 members and a one-to-one conversation named 'Shrimant'. The user asks the Deep Analyzer who drives most conversations, how the group's mood changed over the year, and asks the Roaster to roast a friend based on their voice-note habits.
+
+Expected Agent Behaviour
+
+Create the project and organise both conversations independently.
+Parse the uploaded chat exports and identify participants.
+Distinguish the group conversation from the one-to-one conversation.
+Process available images, videos, and voice notes.
+Build persistent context containing conversation history, topics, relationships, and timelines.
+Generate individual personas for identified participants.
+Allow the Deep Analyzer to identify conversation patterns, participation levels, and mood changes.
+Allow the Roaster to generate personalized, playful roasts grounded in actual chat history.
+Provide relevant conversation evidence supporting the generated insights.
+Allow the user to interact with agents through separate chat interfaces.
+Technical Requirements
+1. Project & Chat Workspace
+Allow users to create and manage multiple projects.
+Support multiple independent conversations within a single project.
+Support both group chats and one-to-one conversations.
+Maintain separate context and memory for each chat.
+Provide an independent discussion window for every conversation.
+Allow users to interact with agents at chat or project level.
+2. Chat Ingestion & Multimodal Processing
+Accept exported chat files such as WhatsApp TXT exports.
+Support conversations with or without attached media.
+Parse messages, timestamps, usernames, and message metadata.
+Automatically detect participants using usernames and tags.
+Identify whether a conversation is a group chat or one-to-one chat.
+Understand images using image analysis.
+Generate summaries of uploaded videos.
+Transcribe voice notes into text.
+Associate processed media with the relevant conversation context.
+3. Context & Persona Engine
+Build persistent memory for every conversation.
+Identify frequently discussed topics and important events.
+Maintain conversation timelines and historical context.
+Identify inside jokes, relationships, and group dynamics.
+Understand communication tone and behavioural patterns.
+Generate individual personas covering communication style, interests, humour, and group roles.
+Update conversational memory as new information becomes available.
+4. Specialized AI Agents
+Implement a Deep Analyzer agent to identify insights, group dynamics, sentiment trends, key moments, and activity patterns.
+Implement a Roaster agent to generate witty and personalized roasts based on actual conversation history.
+Implement a Reply Giver agent to suggest replies in the user's communication style or a selected participant's style.
+Allow users to select and interact with specialized agents for individual chats or entire projects.
+Support an optional Memory Recall agent to retrieve specific events, plans, and historical conversations.
+Ensure agent responses use relevant conversational context.
+5. Interactive Chat & Evidence Retrieval
+Provide an interactive interface for communicating with AI agents.
+Allow queries about an entire project, a specific chat, or an individual participant.
+Retrieve relevant messages and historical context for each query.
+Reference actual chat messages to support generated responses.
+Provide multiple reply suggestions when requested.
+Maintain context throughout an ongoing agent conversation.
+6. Privacy, Scalability & Safety
+Keep conversation data isolated across different projects.
+Allow users to delete uploaded chats and associated memories.
+Ensure user-controlled access to uploaded conversations.
+Handle large chat exports efficiently using chunking, summarization, and retrieval.
+Implement safe and playful roasting with configurable tone controls.
+Prevent harmful or abusive personalized outputs.
+Ensure media and conversation data are processed securely.
