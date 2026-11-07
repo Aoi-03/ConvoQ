@@ -220,16 +220,21 @@ export const localStore = {
   },
 
   // --- Memory ---
-  saveMemory(projectId, memoryObj) {
+  saveMemory(projectId, memoryData) {
     let memories = getFromStorage(KEYS.MEMORIES, []);
     memories = memories.filter((m) => m.project_id !== projectId);
-    memories.push({ ...memoryObj, project_id: projectId, updated_at: new Date().toISOString() });
+    const items = Array.isArray(memoryData) ? memoryData : [memoryData].filter(Boolean);
+    memories.push({ project_id: projectId, items, updated_at: new Date().toISOString() });
     setToStorage(KEYS.MEMORIES, memories);
   },
 
   getMemory(projectId) {
     const memories = getFromStorage(KEYS.MEMORIES, []);
-    return memories.find((m) => m.project_id === projectId) || null;
+    const entry = memories.find((m) => m.project_id === projectId);
+    if (!entry) return [];
+    if (Array.isArray(entry.items)) return entry.items;
+    if (Array.isArray(entry)) return entry;
+    return [];
   },
 
   // Clear everything in local storage

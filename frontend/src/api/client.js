@@ -134,17 +134,21 @@ export const api = {
 
       // Merge or save personas
       const existingPersonas = localStore.getPersonas(projectId);
-      const combinedPersonas = [...existingPersonas];
-      parsed.personas.forEach(p => {
-        if (!combinedPersonas.find(cp => cp.name.toLowerCase() === p.name.toLowerCase())) {
-          combinedPersonas.push(p);
-        }
-      });
+      const combinedPersonas = Array.isArray(existingPersonas) ? [...existingPersonas] : [];
+      if (Array.isArray(parsed.personas)) {
+        parsed.personas.forEach(p => {
+          if (!combinedPersonas.find(cp => cp.name.toLowerCase() === p.name.toLowerCase())) {
+            combinedPersonas.push(p);
+          }
+        });
+      }
       localStore.savePersonas(projectId, combinedPersonas);
 
       // Save memory
       const existingMemory = localStore.getMemory(projectId);
-      localStore.saveMemory(projectId, [...existingMemory, ...parsed.memory]);
+      const safeExistingMem = Array.isArray(existingMemory) ? existingMemory : (existingMemory ? [existingMemory] : []);
+      const safeParsedMem = Array.isArray(parsed.memory) ? parsed.memory : [];
+      localStore.saveMemory(projectId, [...safeExistingMem, ...safeParsedMem]);
 
       return {
         success: true,
