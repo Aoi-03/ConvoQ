@@ -30,7 +30,7 @@ class HybridVectorStore:
         conn = get_db_connection()
         query_params = [project_id]
         sql = """
-            SELECT m.id, m.chat_id, m.timestamp, m.sender, m.content, m.media_summary, c.name as chat_name
+            SELECT m.id, m.project_id, m.chat_id, m.timestamp, m.sender, m.content, m.media_type, m.media_file, m.media_summary, c.name as chat_name
             FROM messages m
             JOIN chats c ON m.chat_id = c.id
             WHERE m.project_id = ? AND m.is_system = 0
@@ -110,16 +110,19 @@ class HybridVectorStore:
             m_file = row["media_file"] if "media_file" in row.keys() else None
             m_summary = row["media_summary"] if "media_summary" in row.keys() else None
 
+            p_id = row["project_id"] if "project_id" in row.keys() else project_id
+            c_id = row["chat_id"] if "chat_id" in row.keys() else (chat_id or "")
+
             download_url = None
             if m_file:
                 clean_name = os.path.basename(m_file)
-                download_url = f"/api/projects/{row['project_id']}/chats/{row['chat_id']}/files/{clean_name}"
+                download_url = f"/api/projects/{p_id}/chats/{c_id}/files/{clean_name}"
             else:
                 # Check for file extension in quote/content
                 fn_match = re.search(r"([\w\-.]+\.(?:pdf|docx|xlsx|pptx|opus|mp3|wav|ogg|jpg|jpeg|png|mp4|zip))", row["content"], re.IGNORECASE)
                 if fn_match:
                     clean_name = fn_match.group(1).replace("(file attached)", "").strip()
-                    download_url = f"/api/projects/{row['project_id']}/chats/{row['chat_id']}/files/{clean_name}"
+                    download_url = f"/api/projects/{p_id}/chats/{c_id}/files/{clean_name}"
 
             citations.append(
                 CitationItem(

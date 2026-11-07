@@ -23,7 +23,7 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 # Why: Ultra-fast latency, native multimodal (voice note .opus transcription,
 # image OCR, video summary), 1M token context window for huge chat exports.
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3-flash-preview")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite-preview")
 
 # -----------------------------------------------------------------------------
 # FAILOVER / BACKUP API CONFIGURATION

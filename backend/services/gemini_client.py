@@ -17,13 +17,13 @@ class GeminiClient:
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or GEMINI_API_KEY or os.getenv("GEMINI_API_KEY", "")
-        self.model_name = GEMINI_MODEL or "gemini-3-flash-preview"
+        self.model_name = GEMINI_MODEL or "gemini-3.1-flash-lite-preview"
         # Known supported Gemini models in order of capability
         self.supported_models = [
             self.model_name,
-            "gemini-3-flash-preview",
             "gemini-3.1-flash-lite-preview",
-            "gemini-3.1-flash-lite"
+            "gemini-3.1-flash-lite",
+            "gemini-3-flash-preview"
         ]
         # Remove duplicates while preserving order
         self.supported_models = list(dict.fromkeys(self.supported_models))
