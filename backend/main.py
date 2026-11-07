@@ -2,9 +2,11 @@ import os
 import uuid
 import json
 import shutil
+import zipfile
+import io
 from pathlib import Path
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -191,16 +193,23 @@ def delete_project(project_id: str):
 
 # --- Chat Upload & Ingestion Endpoints ---
 
-def _ingest_parsed_chat(project_id: str, chat_name: str, parsed, file_path_str: str = "") -> str:
+def _ingest_parsed_chat(
+    project_id: str,
+    chat_name: str,
+    parsed,
+    file_path_str: str = "",
+    chat_id: Optional[str] = None,
+    media_dir: Optional[Path] = None
+) -> str:
     conn = get_db_connection()
-    chat_id = str(uuid.uuid4())
+    c_id = chat_id or str(uuid.uuid4())
     now_iso = datetime.now().isoformat()
 
     conn.execute(
         """INSERT INTO chats (id, project_id, name, chat_type, file_path, total_messages, total_media, date_range_start, date_range_end, created_at)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (
-            chat_id,
+            c_id,
             project_id,
             chat_name,
             parsed.chat_type,
@@ -222,7 +231,7 @@ def _ingest_parsed_chat(project_id: str, chat_name: str, parsed, file_path_str: 
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 p_id,
-                chat_id,
+                c_id,
                 project_id,
                 p_name,
                 stats.get("messages", 0),
@@ -236,7 +245,13 @@ def _ingest_parsed_chat(project_id: str, chat_name: str, parsed, file_path_str: 
 
     # Insert messages
     for msg in parsed.messages:
-        # Check if media needs summary
+        # Check if media file is stored on disk
+        resolved_media_file = msg.media_filename
+        if media_dir and msg.media_filename:
+            candidate = media_dir / msg.media_filename
+            if candidate.exists():
+                resolved_media_file = str(candidate)
+
         media_summary = ""
         if msg.media_type != "none":
             media_summary = f"[{msg.media_type.capitalize()}: {msg.content}]"
@@ -246,13 +261,13 @@ def _ingest_parsed_chat(project_id: str, chat_name: str, parsed, file_path_str: 
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (
                 msg.id,
-                chat_id,
+                c_id,
                 project_id,
                 msg.timestamp_iso,
                 msg.sender,
                 msg.content,
                 msg.media_type,
-                msg.media_filename,
+                resolved_media_file,
                 media_summary,
                 1 if msg.is_system else 0,
                 msg.raw_text
@@ -263,16 +278,16 @@ def _ingest_parsed_chat(project_id: str, chat_name: str, parsed, file_path_str: 
     conn.close()
 
     # Trigger multimodal batch processing
-    MultimodalProcessor.batch_process_chat_media(chat_id)
+    MultimodalProcessor.batch_process_chat_media(c_id)
 
     # Build persistent conversational memory
-    MemoryEngine.analyze_chat_memory(project_id, chat_id)
+    MemoryEngine.analyze_chat_memory(project_id, c_id)
     MemoryEngine.analyze_chat_memory(project_id, None) # Project-level
 
     # Generate or update participant personas
     PersonaGenerator.generate_personas_for_project(project_id)
 
-    return chat_id
+    return c_id
 
 @app.post("/api/projects/{project_id}/chats/upload")
 async def upload_chat(
@@ -280,34 +295,88 @@ async def upload_chat(
     file: UploadFile = File(...),
     chat_name: Optional[str] = Form(None)
 ):
-    # Read file content
     content_bytes = await file.read()
-    try:
-        text = content_bytes.decode("utf-8")
-    except UnicodeDecodeError:
-        text = content_bytes.decode("utf-8-sig", errors="ignore")
+    filename_lower = (file.filename or "").lower()
+    is_zip = filename_lower.endswith(".zip") or content_bytes.startswith(b"PK\x03\x04")
 
     name = chat_name or Path(file.filename).stem or "Uploaded Chat"
-
-    # Save raw file
     project_upload_dir = UPLOAD_DIR / project_id
     project_upload_dir.mkdir(parents=True, exist_ok=True)
-    saved_path = project_upload_dir / file.filename
-    with open(saved_path, "wb") as f:
-        f.write(content_bytes)
+    c_id = str(uuid.uuid4())
+    chat_media_dir = project_upload_dir / c_id / "media"
+    chat_media_dir.mkdir(parents=True, exist_ok=True)
+
+    if is_zip:
+        saved_path = project_upload_dir / file.filename
+        with open(saved_path, "wb") as f:
+            f.write(content_bytes)
+
+        try:
+            with zipfile.ZipFile(io.BytesIO(content_bytes)) as z:
+                # Find all text files excluding Mac OS metadata
+                txt_candidates = [
+                    n for n in z.namelist()
+                    if n.lower().endswith(".txt") and not n.startswith("__MACOSX/") and not Path(n).name.startswith("._")
+                ]
+                if not txt_candidates:
+                    raise HTTPException(status_code=400, detail="No WhatsApp chat .txt found inside the zip archive.")
+
+                # Prefer '_chat.txt' (WhatsApp standard) or largest txt file
+                preferred_txt = next((n for n in txt_candidates if Path(n).name.lower() == "_chat.txt"), None)
+                if not preferred_txt:
+                    preferred_txt = sorted(txt_candidates, key=lambda n: z.getinfo(n).file_size, reverse=True)[0]
+
+                raw_bytes = z.read(preferred_txt)
+                try:
+                    text = raw_bytes.decode("utf-8")
+                except UnicodeDecodeError:
+                    text = raw_bytes.decode("utf-8-sig", errors="ignore")
+
+                # Extract all media attachments
+                for item in z.infolist():
+                    if item.is_dir():
+                        continue
+                    basename = Path(item.filename).name
+                    if not basename or basename.startswith("._") or item.filename.startswith("__MACOSX/"):
+                        continue
+                    # Extract to media dir
+                    target_media_file = chat_media_dir / basename
+                    with open(target_media_file, "wb") as mf:
+                        mf.write(z.read(item.filename))
+
+        except zipfile.BadZipFile:
+            raise HTTPException(status_code=400, detail="Uploaded file is not a valid zip archive.")
+    else:
+        # Standard .txt upload
+        try:
+            text = content_bytes.decode("utf-8")
+        except UnicodeDecodeError:
+            text = content_bytes.decode("utf-8-sig", errors="ignore")
+
+        saved_path = project_upload_dir / file.filename
+        with open(saved_path, "wb") as f:
+            f.write(content_bytes)
 
     # Parse chat
     parsed = WhatsAppParser.parse_chat_text(text, fallback_chat_name=name)
-    chat_id = _ingest_parsed_chat(project_id, name, parsed, str(saved_path))
+    actual_chat_id = _ingest_parsed_chat(
+        project_id,
+        name,
+        parsed,
+        str(saved_path),
+        chat_id=c_id,
+        media_dir=chat_media_dir if is_zip else None
+    )
 
     return {
         "success": True,
-        "chat_id": chat_id,
+        "chat_id": actual_chat_id,
         "name": name,
         "chat_type": parsed.chat_type,
         "participants": parsed.participants,
         "total_messages": parsed.total_messages,
         "total_media": parsed.total_media,
+        "is_zip": is_zip
     }
 
 @app.post("/api/projects/{project_id}/load-sample-data")

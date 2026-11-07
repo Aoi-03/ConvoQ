@@ -120,31 +120,35 @@ class WhatsAppParser:
     @classmethod
     def detect_media(cls, text: str) -> Tuple[str, Optional[str]]:
         """Identify media type and possible filename."""
-        text_lower = text.strip().lower()
+        def _clean_fn(matched: str) -> Optional[str]:
+            if not matched or "." not in matched:
+                return None
+            cleaned = re.sub(r"\s*\(file attached\)", "", matched, flags=re.IGNORECASE).strip()
+            return cleaned if "." in cleaned else None
 
         # Audio / Voice note
         for pat in cls.AUDIO_PATTERNS:
             match = pat.search(text)
             if match:
-                return "audio", match.group(0) if "." in match.group(0) else None
+                return "audio", _clean_fn(match.group(0))
 
         # Video
         for pat in cls.VIDEO_PATTERNS:
             match = pat.search(text)
             if match:
-                return "video", match.group(0) if "." in match.group(0) else None
+                return "video", _clean_fn(match.group(0))
 
         # Image
         for pat in cls.IMAGE_PATTERNS:
             match = pat.search(text)
             if match:
-                return "image", match.group(0) if "." in match.group(0) else None
+                return "image", _clean_fn(match.group(0))
 
         # Document
         for pat in cls.DOCUMENT_PATTERNS:
             match = pat.search(text)
             if match:
-                return "document", match.group(0) if "." in match.group(0) else None
+                return "document", _clean_fn(match.group(0))
 
         return "none", None
 

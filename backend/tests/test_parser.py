@@ -43,3 +43,39 @@ Line 3
     parsed = WhatsAppParser.parse_chat_text(chat_text, "Test")
     assert parsed.messages[0].content == "Line 1\nLine 2\nLine 3"
     assert parsed.messages[1].content == "Got it."
+
+def test_zip_upload_and_extraction():
+    import io
+    import zipfile
+    from fastapi.testclient import TestClient
+    from backend.main import app
+
+    client = TestClient(app)
+    proj_res = client.post("/api/projects", json={"name": "Zip Test", "description": "Testing WhatsApp ZIP"})
+    assert proj_res.status_code == 200
+    proj_id = proj_res.json()["id"]
+
+    # Create mock WhatsApp zip in memory
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w") as z:
+        chat_content = """[12/01/24, 8:00:00 PM] Alice: Hey Bob, check this voice note!
+[12/01/24, 8:00:15 PM] Alice: PTT-20241201-WA0001.opus (file attached)
+[12/01/24, 8:01:00 PM] Bob: Got your audio, loved it.
+"""
+        z.writestr("_chat.txt", chat_content.encode("utf-8"))
+        z.writestr("PTT-20241201-WA0001.opus", b"fake_opus_audio_bytes")
+        z.writestr("photo.jpg", b"fake_jpg_image_bytes")
+
+    zip_buffer.seek(0)
+    upload_res = client.post(
+        f"/api/projects/{proj_id}/chats/upload",
+        files={"file": ("WhatsApp_Chat_Alice.zip", zip_buffer, "application/zip")},
+        data={"chat_name": "Alice 1:1"}
+    )
+    assert upload_res.status_code == 200
+    data = upload_res.json()
+    assert data["success"] is True
+    assert data["is_zip"] is True
+    assert "Alice" in data["participants"]
+    assert "Bob" in data["participants"]
+    assert data["total_messages"] == 3

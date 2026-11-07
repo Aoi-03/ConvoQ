@@ -125,7 +125,28 @@ export const api = {
 
     // 2. Robust Client-Side LocalStorage Fallback (Works 100% offline, zero backend required)
     try {
-      const rawText = await file.text();
+      let rawText = '';
+      if (file.name.toLowerCase().endsWith('.zip')) {
+        const JSZip = (await import('jszip')).default;
+        const zip = await JSZip.loadAsync(file);
+        // Find _chat.txt or any .txt
+        let txtFile = zip.file('_chat.txt');
+        if (!txtFile) {
+          const txtFiles = Object.keys(zip.files).filter(
+            k => k.toLowerCase().endsWith('.txt') && !k.startsWith('__MACOSX/') && !k.split('/').pop().startsWith('._')
+          );
+          if (txtFiles.length > 0) {
+            txtFile = zip.file(txtFiles[0]);
+          }
+        }
+        if (!txtFile) {
+          throw new Error('No WhatsApp chat .txt found inside the zip archive.');
+        }
+        rawText = await txtFile.async('text');
+      } else {
+        rawText = await file.text();
+      }
+
       const parsed = parseWhatsAppText(rawText, finalChatName);
 
       // Save into LocalStorage

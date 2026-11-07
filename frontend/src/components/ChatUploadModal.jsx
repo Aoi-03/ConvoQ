@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UploadCloud, FileText, CheckCircle2, X } from 'lucide-react';
+import { UploadCloud, FileText, CheckCircle2, X, FileArchive, Mic, Image as ImageIcon } from 'lucide-react';
 
 export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }) {
   const [file, setFile] = useState(null);
@@ -7,6 +7,8 @@ export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }
   const [dragActive, setDragActive] = useState(false);
 
   if (!isOpen) return null;
+
+  const isZip = file && file.name.toLowerCase().endsWith('.zip');
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -62,8 +64,8 @@ export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }
             <UploadCloud className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-[#150e0f]">Import WhatsApp Chat Export</h2>
-            <p className="text-xs text-[#5e4f53]">Automatic participant detection, group/1:1 classification & media parsing</p>
+            <h2 className="text-base font-bold text-[#150e0f]">Import WhatsApp Chat</h2>
+            <p className="text-xs text-[#5e4f53]">Supports .txt text exports and .zip exports with voice notes & photos</p>
           </div>
         </div>
 
@@ -78,30 +80,54 @@ export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }
               dragActive
                 ? 'border-[#9b6d77] bg-[#f4ecee]'
                 : file
-                ? 'border-[#87ada2] bg-[#edf4f2]'
+                ? isZip
+                  ? 'border-[#9b6d77] bg-[#f4ecee]/40'
+                  : 'border-[#87ada2] bg-[#edf4f2]'
                 : 'border-[#ded1d5] hover:border-[#9b6d77]/60 bg-[#fcfafb]'
             }`}
           >
             <input
               type="file"
-              accept=".txt"
+              accept=".txt,.zip,application/zip,application/x-zip-compressed"
               onChange={handleFileChange}
               className="absolute inset-0 opacity-0 cursor-pointer"
             />
             {file ? (
               <div className="flex flex-col items-center">
-                <FileText className="w-10 h-10 text-[#87ada2] mb-2" />
-                <span className="text-xs font-bold text-[#150e0f]">{file.name}</span>
-                <span className="text-[11px] text-[#6f5e63] mt-1">{(file.size / 1024).toFixed(1)} KB</span>
+                {isZip ? (
+                  <FileArchive className="w-10 h-10 text-[#9b6d77] mb-2" />
+                ) : (
+                  <FileText className="w-10 h-10 text-[#87ada2] mb-2" />
+                )}
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-[#150e0f]">{file.name}</span>
+                  {isZip && (
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#f4ecee] text-[#9b6d77] border border-[#9b6d77]/30 uppercase">
+                      ZIP with Media
+                    </span>
+                  )}
+                </div>
+                <span className="text-[11px] text-[#6f5e63] mt-1">
+                  {(file.size / 1024 / (file.size > 1024 * 1024 ? 1024 : 1)).toFixed(1)} {file.size > 1024 * 1024 ? 'MB' : 'KB'}
+                </span>
+                {isZip && (
+                  <p className="text-[11px] text-[#3a6357] font-medium mt-1 flex items-center gap-2">
+                    <span className="flex items-center gap-0.5"><Mic className="w-3 h-3 text-[#9b6d77]" /> Audio Voice Notes</span>
+                    <span>•</span>
+                    <span className="flex items-center gap-0.5"><ImageIcon className="w-3 h-3 text-[#87ada2]" /> Photos</span>
+                  </p>
+                )}
                 <span className="text-[10px] text-[#9b6d77] underline mt-2 font-medium">Click or drop another file to replace</span>
               </div>
             ) : (
               <div className="flex flex-col items-center">
                 <UploadCloud className="w-10 h-10 text-[#9b6d77] mb-2" />
-                <span className="text-xs font-bold text-[#150e0f]">Drag & drop your chat export (.txt) here</span>
-                <span className="text-[11px] text-[#5e4f53] mt-1">Supports iOS, Android, 12h/24h bracketed or dash exports</span>
+                <span className="text-xs font-bold text-[#150e0f]">Drag & drop WhatsApp export (.txt or .zip)</span>
+                <span className="text-[11px] text-[#5e4f53] mt-1 max-w-xs">
+                  Export "With Media" (.zip) to transcribe voice notes & photos, or "Without Media" (.txt) for text only.
+                </span>
                 <span className="text-xs px-3 py-1 rounded-lg bg-[#f4ecee] text-[#9b6d77] mt-3 font-bold border border-[#9b6d77]/30 shadow-sm">
-                  Browse File
+                  Browse Files
                 </span>
               </div>
             )}
@@ -123,7 +149,7 @@ export default function ChatUploadModal({ isOpen, onClose, onUpload, uploading }
           <div className="p-3 rounded-xl bg-[#fcfafb] border border-[#e8dfe2] text-[11px] text-[#5e4f53] flex items-start gap-2">
             <CheckCircle2 className="w-4 h-4 text-[#87ada2] flex-shrink-0 mt-0.5" />
             <span>
-              The engine will automatically detect participants, compute voice note and media statistics, build conversational memory, and generate participant personas upon ingestion.
+              The engine will automatically unpack the export, detect participants, transcribe audio voice notes (.opus), OCR photos, and generate participant personas.
             </span>
           </div>
 
