@@ -117,6 +117,10 @@ class CitationItem(BaseModel):
     chat_name: str
     quote: str
     relevance_reason: Optional[str] = None
+    media_type: Optional[str] = "none"
+    media_file: Optional[str] = None
+    media_summary: Optional[str] = None
+    download_url: Optional[str] = None
 
 # --- Agent Request / Response Models ---
 class AgentQueryRequest(BaseModel):

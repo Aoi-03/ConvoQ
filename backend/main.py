@@ -9,6 +9,7 @@ from datetime import datetime
 from typing import List, Optional, Dict, Any
 
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends
+from fastapi.responses import FileResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -428,6 +429,81 @@ def get_chat_messages(project_id: str, chat_id: str, limit: int = 100, offset: i
         "offset": offset,
         "messages": [dict(m) for m in messages]
     }
+
+# --- File & Media Download Endpoints ---
+
+@app.get("/api/projects/{project_id}/chats/{chat_id}/files/{filename}")
+@app.get("/api/projects/{project_id}/files/{filename}")
+def download_chat_file(project_id: str, filename: str, chat_id: Optional[str] = None):
+    """
+    Serves physical media files (PDF, audio .opus, images .jpg, videos .mp4)
+    extracted from WhatsApp ZIP exports, or generates verified transcript receipts.
+    """
+    clean_filename = Path(filename).name
+
+    # 1. Search in media directories
+    search_dirs = [
+        UPLOAD_DIR / project_id / (chat_id or "") / "media",
+        UPLOAD_DIR / project_id / (chat_id or ""),
+        UPLOAD_DIR / project_id / "media",
+        UPLOAD_DIR / project_id,
+    ]
+
+    for s_dir in search_dirs:
+        candidate = s_dir / clean_filename
+        if candidate.exists() and candidate.is_file():
+            return FileResponse(
+                path=candidate,
+                filename=clean_filename,
+                media_type="application/octet-stream"
+            )
+
+    # Search recursively in project directory
+    proj_dir = UPLOAD_DIR / project_id
+    if proj_dir.exists():
+        for matched in proj_dir.rglob(clean_filename):
+            if matched.is_file():
+                return FileResponse(
+                    path=matched,
+                    filename=clean_filename,
+                    media_type="application/octet-stream"
+                )
+
+    # 2. If binary file was omitted in .txt export, generate a verification receipt transcript
+    conn = get_db_connection()
+    msg_row = conn.execute(
+        "SELECT * FROM messages WHERE project_id = ? AND (media_file LIKE ? OR content LIKE ?) LIMIT 1",
+        (project_id, f"%{clean_filename}%", f"%{clean_filename}%")
+    ).fetchone()
+    conn.close()
+
+    receipt_content = f"""====================================================
+CONVOQ VERIFIED CHAT EVIDENCE & FILE RECEIPT
+====================================================
+File Name:        {clean_filename}
+Project ID:       {project_id}
+Chat Reference:   {chat_id or 'Project Scope'}
+Status:           Referenced in WhatsApp Chat Record
+
+EVIDENCE RECORD:
+Sender:           {msg_row['sender'] if msg_row else 'Chat Participant'}
+Timestamp:        {msg_row['timestamp'] if msg_row else 'Recorded in timeline'}
+Message Context:  {msg_row['content'] if msg_row else 'Attachment reference in chat logs'}
+Media Summary:    {msg_row['media_summary'] if msg_row and msg_row['media_summary'] else 'Attachment noted'}
+
+NOTE ON MEDIA FILES:
+This file was detected in a WhatsApp export. In plain '.txt' exports,
+WhatsApp only writes text placeholders. To download the exact binary
+bytes (PDF documents, .opus voice notes, high-res photos, or videos),
+export the chat from WhatsApp using "Attach Media" (.zip) and upload
+the zip archive into ConvoQ.
+====================================================
+"""
+    return Response(
+        content=receipt_content,
+        media_type="text/plain; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{Path(clean_filename).stem}_evidence_receipt.txt"'}
+    )
 
 
 # --- Personas & Memory Endpoints ---

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { History, Sparkles, Send, Quote, BookmarkCheck, ArrowRight } from 'lucide-react';
+import { History, Sparkles, Send, Quote, BookmarkCheck, ArrowRight, Download, FileDown, FileText, Music, Image as ImageIcon, Video } from 'lucide-react';
 import MarkdownViewer from './MarkdownViewer';
 
 export default function MemoryRecallView({
@@ -13,8 +13,8 @@ export default function MemoryRecallView({
 
   const sampleQueries = [
     "What did we decide about the Goa trip in June 2023?",
-    "When was the assignment deadline discussed?",
-    "Who paid for the villa booking and what was the amount?",
+    "When was the assignment deadline or syllabus PDF shared?",
+    "Who sent the voice notes and what were the plans?",
     "What are our recurring inside jokes?",
   ];
 
@@ -27,6 +27,33 @@ export default function MemoryRecallView({
   const handleSampleClick = (q) => {
     setQuery(q);
     onRecall(q);
+  };
+
+  // Detect any referenced files in citations (e.g. PDF documents, voice notes, photos)
+  const referencedFiles = (lastResponse?.citations || []).reduce((acc, c) => {
+    const match = (c.quote || '').match(/([\w\-.]+\.(?:pdf|docx|xlsx|pptx|opus|mp3|wav|ogg|jpg|jpeg|png|mp4|zip))/i);
+    const filename = match
+      ? match[1].replace('(file attached)', '').trim()
+      : (c.media_file ? c.media_file.split('/').pop().split('\\').pop() : null);
+
+    if (filename && !acc.find(f => f.filename.toLowerCase() === filename.toLowerCase())) {
+      acc.push({
+        filename,
+        sender: c.sender,
+        timestamp: c.timestamp,
+        download_url: c.download_url || `/api/projects/files/${filename}`,
+        citation_id: c.citation_id,
+      });
+    }
+    return acc;
+  }, []);
+
+  const getFileIcon = (filename) => {
+    const ext = (filename || '').split('.').pop().toLowerCase();
+    if (['opus', 'ogg', 'mp3', 'wav'].includes(ext)) return <Music className="w-4 h-4 text-[#9b6d77]" />;
+    if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) return <ImageIcon className="w-4 h-4 text-[#87ada2]" />;
+    if (['mp4', 'mov', '3gp'].includes(ext)) return <Video className="w-4 h-4 text-[#5e4f53]" />;
+    return <FileText className="w-4 h-4 text-[#c26154]" />;
   };
 
   return (
@@ -119,6 +146,48 @@ export default function MemoryRecallView({
 
             {/* Rendered Markdown Output */}
             <MarkdownViewer content={lastResponse.answer} onOpenCitation={onOpenCitation} />
+
+            {/* Referenced Files & Direct Download Options */}
+            {referencedFiles.length > 0 && (
+              <div className="p-4 rounded-xl bg-gradient-to-r from-[#f4ecee]/80 via-[#ffffff] to-[#edf4f2]/80 border border-[#9b6d77]/30 space-y-3 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#150e0f] flex items-center gap-1.5">
+                    <FileDown className="w-4 h-4 text-[#9b6d77]" />
+                    Referenced Files & Downloads ({referencedFiles.length})
+                  </span>
+                  <span className="text-[10px] text-[#5e4f53] font-medium">Click to download directly</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {referencedFiles.map((file, idx) => (
+                    <a
+                      key={idx}
+                      href={file.download_url}
+                      download={file.filename}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-3 rounded-xl bg-[#ffffff] hover:bg-[#fcfafb] border border-[#e8dfe2] hover:border-[#9b6d77] shadow-xs transition flex items-center justify-between group cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5 overflow-hidden">
+                        <div className="w-9 h-9 rounded-lg bg-[#f4ecee] border border-[#9b6d77]/20 flex items-center justify-center text-[#9b6d77] flex-shrink-0">
+                          {getFileIcon(file.filename)}
+                        </div>
+                        <div className="overflow-hidden">
+                          <span className="text-xs font-bold text-[#150e0f] block truncate group-hover:text-[#9b6d77] transition">
+                            {file.filename}
+                          </span>
+                          <span className="text-[10px] text-[#6f5e63] block truncate">
+                            {file.sender} • {file.timestamp}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-2 rounded-lg bg-[#f4ecee] group-hover:bg-[#9b6d77] text-[#9b6d77] group-hover:text-white transition flex-shrink-0 ml-2 shadow-2xs">
+                        <Download className="w-3.5 h-3.5 group-hover:translate-y-0.5 transition" />
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Citations Badges */}
             {lastResponse.citations?.length > 0 && (

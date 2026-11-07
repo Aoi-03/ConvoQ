@@ -1,8 +1,22 @@
 import React from 'react';
-import { X, Quote, Clock, MessageSquare, UserCheck, ShieldCheck } from 'lucide-react';
+import { X, Quote, Clock, MessageSquare, UserCheck, ShieldCheck, Download, FileText, Music, Image as ImageIcon, Video } from 'lucide-react';
 
 export default function EvidenceDrawer({ isOpen, onClose, citations, selectedRefId }) {
   if (!isOpen) return null;
+
+  const getFileMatch = (text) => {
+    if (!text) return null;
+    const match = text.match(/([\w\-.]+\.(?:pdf|docx|xlsx|pptx|opus|mp3|wav|ogg|jpg|jpeg|png|mp4|zip))/i);
+    return match ? match[1] : null;
+  };
+
+  const getFileIcon = (filename) => {
+    const ext = (filename || '').split('.').pop().toLowerCase();
+    if (['opus', 'ogg', 'mp3', 'wav'].includes(ext)) return <Music className="w-3.5 h-3.5 text-[#9b6d77]" />;
+    if (['jpg', 'jpeg', 'png', 'webp'].includes(ext)) return <ImageIcon className="w-3.5 h-3.5 text-[#87ada2]" />;
+    if (['mp4', 'mov', '3gp'].includes(ext)) return <Video className="w-3.5 h-3.5 text-[#5e4f53]" />;
+    return <FileText className="w-3.5 h-3.5 text-[#c26154]" />;
+  };
 
   return (
     <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-[#ffffff] border-l border-[#e8dfe2] shadow-2xl flex flex-col transform transition-transform duration-300 ease-in-out text-[#150e0f]">
@@ -69,6 +83,23 @@ export default function EvidenceDrawer({ isOpen, onClose, citations, selectedRef
                 <div className="p-2.5 rounded-lg bg-[#fcfafb] border-l-2 border-[#9b6d77] text-xs text-[#3d3134] italic font-sans leading-relaxed">
                   "{c.quote}"
                 </div>
+
+                {/* Downloadable Media / File Button if referenced */}
+                {(c.download_url || getFileMatch(c.quote)) && (
+                  <div className="mt-2.5 pt-2 border-t border-[#f4ecee]">
+                    <a
+                      href={c.download_url || `/api/projects/${c.project_id || ''}/files/${getFileMatch(c.quote)}`}
+                      download={getFileMatch(c.quote) || 'attached_file'}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#f4ecee] hover:bg-[#ebdada] text-[#9b6d77] border border-[#9b6d77]/25 text-xs font-bold transition shadow-xs cursor-pointer group"
+                    >
+                      {getFileIcon(getFileMatch(c.quote) || c.download_url)}
+                      <span className="truncate max-w-[160px]">{getFileMatch(c.quote) || 'Download Attached File'}</span>
+                      <Download className="w-3.5 h-3.5 group-hover:translate-y-0.5 transition" />
+                    </a>
+                  </div>
+                )}
 
                 {c.relevance_reason && (
                   <div className="mt-2 text-[10px] text-[#48684a] flex items-center gap-1 font-medium">

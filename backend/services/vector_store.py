@@ -105,6 +105,22 @@ class HybridVectorStore:
             if row["media_summary"]:
                 quote_text += f" ({row['media_summary']})"
 
+            # Extract possible file reference
+            m_type = row["media_type"] if "media_type" in row.keys() else "none"
+            m_file = row["media_file"] if "media_file" in row.keys() else None
+            m_summary = row["media_summary"] if "media_summary" in row.keys() else None
+
+            download_url = None
+            if m_file:
+                clean_name = os.path.basename(m_file)
+                download_url = f"/api/projects/{row['project_id']}/chats/{row['chat_id']}/files/{clean_name}"
+            else:
+                # Check for file extension in quote/content
+                fn_match = re.search(r"([\w\-.]+\.(?:pdf|docx|xlsx|pptx|opus|mp3|wav|ogg|jpg|jpeg|png|mp4|zip))", row["content"], re.IGNORECASE)
+                if fn_match:
+                    clean_name = fn_match.group(1).replace("(file attached)", "").strip()
+                    download_url = f"/api/projects/{row['project_id']}/chats/{row['chat_id']}/files/{clean_name}"
+
             citations.append(
                 CitationItem(
                     citation_id=f"Ref {i}",
@@ -113,7 +129,11 @@ class HybridVectorStore:
                     timestamp=row["timestamp"],
                     chat_name=row["chat_name"],
                     quote=quote_text[:200],
-                    relevance_reason=f"Matched context in {row['chat_name']}"
+                    relevance_reason=f"Matched context in {row['chat_name']}",
+                    media_type=m_type,
+                    media_file=m_file,
+                    media_summary=m_summary,
+                    download_url=download_url
                 )
             )
 
