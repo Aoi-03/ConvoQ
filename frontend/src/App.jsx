@@ -306,10 +306,10 @@ export default function App() {
               )}
 
               {/* Main Content Body */}
-              <div className="flex-1 overflow-y-auto p-6">
+              <div className="flex-1 overflow-y-auto p-4 md:p-6">
                 {/* 1. AGENT STUDIO */}
                 {mainTab === 'agents' && (
-                  <div className="h-full">
+                  <div className="min-h-full">
                     {agentTab === 'deep_analyzer' && (
                       <DeepAnalyzerView
                         loading={agentLoading}

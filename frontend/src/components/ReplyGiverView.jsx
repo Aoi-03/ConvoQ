@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MessageSquarePlus, Copy, Check, Sparkles, Send, Quote, UserCheck, ArrowRight } from 'lucide-react';
+import MarkdownViewer from './MarkdownViewer';
 
 export default function ReplyGiverView({
   onSuggest,
@@ -33,7 +34,7 @@ export default function ReplyGiverView({
   };
 
   return (
-    <div className="flex flex-col h-full space-y-4 text-[#150e0f]">
+    <div className="flex flex-col space-y-4 text-[#150e0f] pb-8">
       {/* Intro Banner */}
       <div className="p-4 rounded-2xl bg-gradient-to-r from-[#f4ecee] via-[#ffffff] to-[#edf4f2] border border-[#e8dfe2] flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
@@ -150,7 +151,7 @@ export default function ReplyGiverView({
       </form>
 
       {/* Response & Quick Suggestion Chips */}
-      <div className="flex-1 overflow-y-auto p-4 rounded-2xl bg-[#ffffff] border border-[#e8dfe2] shadow-sm space-y-4">
+      <div className="w-full p-5 md:p-6 rounded-2xl bg-[#ffffff] border border-[#e8dfe2] shadow-sm space-y-4">
         {loading ? (
           <div className="py-12 flex flex-col items-center justify-center text-[#6f5e63] space-y-3">
             <div className="w-8 h-8 border-2 border-[#87ada2] border-t-transparent rounded-full animate-spin"></div>
@@ -186,10 +187,8 @@ export default function ReplyGiverView({
               </div>
             )}
 
-            {/* Markdown Answer */}
-            <div className="prose prose-sm max-w-none text-[#150e0f] text-xs leading-relaxed space-y-2 whitespace-pre-wrap">
-              {lastResponse.answer}
-            </div>
+            {/* Rendered Markdown Output */}
+            <MarkdownViewer content={lastResponse.answer} onOpenCitation={onOpenCitation} />
 
             {/* Citations */}
             {lastResponse.citations?.length > 0 && (
