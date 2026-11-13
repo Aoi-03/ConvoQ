@@ -10,16 +10,16 @@ Upload a chat export, and ConvoQ figures out who the main characters are, what y
 
 ### Four AI agents, each built for a different job
 
-**📊 Deep Analyzer**
+** Deep Analyzer**
 Breaks down your chat's conversation dynamics — who drives discussions, who kicks things off after a long silence, how participation is distributed, and how the group's emotional tone shifted month by month. Ask it anything: *"Who dominates conversations and how did the mood change around exam season?"*
 
-**🔥 The Roaster**
+** The Roaster**
 Generates personalized, witty roasts grounded in each person's actual chat habits. It reads their real quirks — the 3-minute voice notes, the "on my way" texts sent from bed, the all-caps excitement — and turns them into comedy. Three intensity levels: Mild 🍵, Savage 🔥, and Brutal 💀. Built-in safety filters keep it funny rather than mean.
 
-**💬 Reply Giver**
+** Reply Giver**
 Stuck on how to reply to something? Paste the message (or describe the situation), pick a vibe — Casual, Witty, Diplomatic, or Ultra-Brief — and get four ready-to-copy suggestions. You can also clone someone's texting style so the reply sounds exactly like them.
 
-**🔍 Memory Recall**
+** Memory Recall**
 The group decided something about the Goa trip in June. Someone owed someone money. There was a plan for that birthday dinner. Memory Recall finds it, tells you exactly what was said, by whom, and when — and cites the original message so you can verify it yourself.
 
 ### Every answer is backed by evidence
@@ -131,7 +131,7 @@ Good prompts to try once loaded:
 | Agent | Try asking... |
 |---|---|
 | Deep Analyzer | *"Who drives most conversations and how did the group mood change over the year?"* |
-| The Roaster | Select Shrimant → Savage 🔥 intensity → click Roast |
+| The Roaster | Select Shrimant → Savage intensity → click Roast |
 | Reply Giver | *"Meet at CCD in 20 mins?"* → choose Witty or Clone Shrimant |
 | Memory Recall | *"What did we decide about the Goa trip in June 2023?"* |
 
