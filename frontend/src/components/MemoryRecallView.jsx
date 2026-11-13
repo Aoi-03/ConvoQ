@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { History, Sparkles, Send, Quote, BookmarkCheck, ArrowRight, Download, FileDown, FileText, Music, Image as ImageIcon, Video } from 'lucide-react';
 import MarkdownViewer from './MarkdownViewer';
+import { resolveApiUrl } from '../api/client';
 
 export default function MemoryRecallView({
   onRecall,
@@ -41,7 +42,7 @@ export default function MemoryRecallView({
         filename,
         sender: c.sender,
         timestamp: c.timestamp,
-        download_url: c.download_url || `/api/projects/files/${filename}`,
+        download_url: resolveApiUrl(c.download_url || `/api/projects/files/${filename}`),
         citation_id: c.citation_id,
       });
     }

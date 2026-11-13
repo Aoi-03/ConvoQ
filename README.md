@@ -119,6 +119,17 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ---
 
+## Deploy to Cloud (Render + Vercel)
+
+ConvoQ is pre-configured for a dual deployment:
+- **Backend (FastAPI)** on **Render**: Pre-configured with `render.yaml` blueprint and `requirements.txt`.
+- **Frontend (React + Vite)** on **Vercel**: Pre-configured with `vercel.json` for client-side SPA routing and `VITE_API_BASE_URL` support.
+
+👉 **See the complete step-by-step instructions in [DEPLOYMENT.md](DEPLOYMENT.md).**
+
+
+---
+
 ## Try it immediately — no chat export needed
 
 Click **"Load 'Suman' Scenario"** in the sidebar. It loads two pre-built sample chats:

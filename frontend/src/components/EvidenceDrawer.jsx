@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, Quote, Clock, MessageSquare, UserCheck, ShieldCheck, Download, FileText, Music, Image as ImageIcon, Video } from 'lucide-react';
+import { resolveApiUrl } from '../api/client';
 
 export default function EvidenceDrawer({ isOpen, onClose, citations, selectedRefId }) {
   if (!isOpen) return null;
@@ -88,7 +89,7 @@ export default function EvidenceDrawer({ isOpen, onClose, citations, selectedRef
                 {(c.download_url || getFileMatch(c.quote)) && (
                   <div className="mt-2.5 pt-2 border-t border-[#f4ecee]">
                     <a
-                      href={c.download_url || `/api/projects/${c.project_id || ''}/files/${getFileMatch(c.quote)}`}
+                      href={resolveApiUrl(c.download_url || `/api/projects/${c.project_id || ''}/files/${getFileMatch(c.quote)}`)}
                       download={getFileMatch(c.quote) || 'attached_file'}
                       target="_blank"
                       rel="noreferrer"

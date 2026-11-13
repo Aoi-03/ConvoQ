@@ -1,6 +1,6 @@
 @echo off
 echo ========================================================
-echo Starting ConvoQ (FastAPI Backend + Vite Frontend)
+echo Starting ConvoQ ~ by EYEPATCH
 echo ========================================================
 
 :: Start Backend

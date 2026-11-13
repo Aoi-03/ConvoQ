@@ -1,7 +1,26 @@
 import { localStore } from '../utils/localStorageStore';
 import { parseWhatsAppText } from '../utils/whatsappParser';
 
-const API_BASE = '/api';
+const rawBase = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '';
+const cleanBase = rawBase ? rawBase.replace(/\/+$/, '') : '';
+export const API_BASE = cleanBase
+  ? (cleanBase.endsWith('/api') ? cleanBase : `${cleanBase}/api`)
+  : '/api';
+
+/**
+ * Resolves full URL for file downloads and media attachments.
+ * Works seamlessly whether hosted on same domain (proxy/rewrites) or separate domains (cross-origin).
+ */
+export function resolveApiUrl(path) {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  if (API_BASE.startsWith('http://') || API_BASE.startsWith('https://')) {
+    const subPath = cleanPath.startsWith('/api/') ? cleanPath.slice(4) : cleanPath;
+    return `${API_BASE}${subPath}`;
+  }
+  return cleanPath;
+}
 
 /**
  * Universal safe fetch that handles proxy errors, timeouts, and empty responses

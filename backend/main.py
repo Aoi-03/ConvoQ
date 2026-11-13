@@ -14,7 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from backend.config import (
-    DB_PATH, UPLOAD_DIR, GEMINI_API_KEY, GEMINI_MODEL, CORS_ORIGINS, BASE_DIR
+    DB_PATH, UPLOAD_DIR, GEMINI_API_KEY, GEMINI_MODEL, CORS_ORIGINS, BASE_DIR, HOST, PORT
 )
 from backend.models.database import init_db, get_db_connection
 from backend.models.schemas import (
@@ -44,10 +44,12 @@ app = FastAPI(
 )
 
 # CORS Middleware
+allow_all = "*" in CORS_ORIGINS or not CORS_ORIGINS
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=CORS_ORIGINS,
-    allow_credentials=True,
+    allow_origins=["*"] if allow_all else CORS_ORIGINS,
+    allow_credentials=False if allow_all else True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -60,6 +62,10 @@ recall_agent = MemoryRecallAgent()
 
 
 # --- System & Settings Endpoints ---
+
+@app.get("/healthz")
+def healthz():
+    return {"status": "ok"}
 
 @app.get("/api/health")
 def health_check():
@@ -642,12 +648,29 @@ if FRONTEND_DIST.exists():
     if assets_dir.exists():
         app.mount("/assets", StaticFiles(directory=str(assets_dir)), name="assets")
 
+    @app.get("/")
     @app.get("/{full_path:path}")
-    def serve_frontend(full_path: str):
+    def serve_frontend(full_path: str = ""):
         if full_path.startswith("api/"):
             raise HTTPException(status_code=404, detail="API endpoint not found")
         file_path = FRONTEND_DIST / full_path
         if file_path.is_file():
             return FileResponse(file_path)
         return FileResponse(FRONTEND_DIST / "index.html")
+else:
+    @app.get("/")
+    def root_status():
+        return {
+            "status": "online",
+            "service": "ConvoQ API",
+            "version": "1.0.0",
+            "health": "/api/health",
+            "docs": "/docs"
+        }
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("backend.main:app", host=HOST, port=PORT, reload=False)
+
 
